@@ -7,12 +7,14 @@ import sys
 from config import API_KEY
 import asyncio
 from weather import get_weather
+from database.users import UsersRepository
 
 dp = Dispatcher()
 
 @dp.message(CommandStart())
 async def start_handler(message: Message) -> None:
-    await message.answer(f'Hello, {message.from_user.first_name}')
+    user_id =  await UsersRepository().add_one(id=message.from_user.id, username=message.from_user.first_name)
+    await message.answer(f'Hello, {message.from_user.first_name}, your id = {user_id}')
 
 @dp.message(Command("weather"))
 async def weather_handler(message: Message) -> None:
