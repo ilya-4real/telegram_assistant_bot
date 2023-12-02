@@ -18,19 +18,19 @@ class AbstractRepository(ABC):
 class SQLAlchemyRepository(AbstractRepository):
     model = None
 
-    async def add_one(self, id):
+    async def add_one(self, **data):
         async with async_session_maker() as session:
-            session.add(self.model(id=id))
+            stmt = insert(self.model).values(data).returning(self.model.id)
             try:
+                res = await session.execute(stmt)
                 await session.commit()
             except IntegrityError:
-                query = select(self.model.id)
-                res = await session.execute(query)
-            return res
+                return "already exists"
+            return res.one()[0]
         
     async def get_one(self, id:int):
         async with async_session_maker() as session:
-            query = select(self.model).where(self.model.c.id == id)
+            query = select(self.model).where(self.model.id == id)
             res = await session.execute(query)
-            return res
+            return res.one_or_none()
         

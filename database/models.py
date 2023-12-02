@@ -1,14 +1,20 @@
-from sqlalchemy.orm import declarative_base
-from sqlalchemy import Column, BigInteger, Boolean, String, TIMESTAMP
+from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import BigInteger, text
+from .database import Base
 
 from datetime import datetime
+from typing import Annotated
 
-Base = declarative_base()
 
+pk = Annotated[int, mapped_column(BigInteger, primary_key=True)]
 
 class User(Base):
     __tablename__ = "users_table"
-    id = Column(BigInteger, primary_key=True)
-    username = Column(String, nullable=False, default="unknown")
-    registered_at = Column(TIMESTAMP, nullable=False, default=datetime.now())
-    is_verified = Column(Boolean, nullable=False, default=False)
+    id: Mapped[pk]
+    username: Mapped[str] = mapped_column(nullable=False, default="unknown")
+    email: Mapped[str | None]
+    registered_at: Mapped[datetime] = mapped_column(
+        nullable=False, 
+        default=datetime.utcnow
+        )
+    is_verified: Mapped[bool] = mapped_column(nullable=False, default=False)
