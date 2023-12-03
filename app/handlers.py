@@ -28,8 +28,6 @@ async def get_my_info(message: Message):
                f'date of starting : {res[0].registered_at}',
                sep='\n'
                )
-    msg_content = re.search(r"( .*@\w+\.\w+)", message.text)
-    print(msg_content.group())
     await message.answer(msg, parse_mode="MARKDOWN")
 
 
@@ -38,7 +36,7 @@ async def user_email_handler(message: Message):
     found_email = re.search(r"( .*@\w+\.\w+)", message.text)
     if found_email is not None: 
         ready_email = found_email.group().strip()
-        await UsersRepository().add_user_email(message.from_user.id, ready_email)
+        await UsersRepository().set_email(message.from_user.id, ready_email)
         await message.answer("successfully added your email!")
     else:
         await message.answer("invalid email. try again")
@@ -47,5 +45,4 @@ async def user_email_handler(message: Message):
 @router.message(Command("weather"))
 async def weather_handler(message: Message) -> None:
     weather = await get_weather()
-    answer = str(round(weather['main']['temp']-273.15))
-    await message.answer(answer)
+    await message.answer(weather)

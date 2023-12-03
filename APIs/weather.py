@@ -14,7 +14,11 @@ async def get_weather():
             )
             ) as responce:
             print(responce.status)
-            return await responce.json()
+            weather = await responce.json()
+            try:
+                return weather['main']['temp']-273
+            except:
+                return None
 
 async def main():
     weather_task = asyncio.create_task(get_weather())
