@@ -1,29 +1,23 @@
 import aiohttp
-from config import WEATHER_KEY, WEATHER_API_URL, cities
-import asyncio
-
-coords = cities.get('kaliningrad')
-
-async def get_weather():
-    async with aiohttp.ClientSession() as session:
-        async with session.get(
-            WEATHER_API_URL.format(
-            lat=coords[0], 
-            lon=coords[1], 
-            API_KEY=WEATHER_KEY
-            )
-            ) as responce:
-            print(responce.status)
-            weather = await responce.json()
-            try:
-                return weather['main']['temp']-273
-            except:
-                return None
-
-async def main():
-    weather_task = asyncio.create_task(get_weather())
-    await weather_task
+from config import WEATHER_API_URL
+from abstract_poller import AbstractApiPoller
 
 
-if __name__ =="__main__":
-    asyncio.run(main())
+class WeatherApiPoller(AbstractApiPoller):
+    def __init__(self, key, **params) -> None:
+        self.url = WEATHER_API_URL
+        self.params = {
+            "appid": key,
+            **params
+        }
+
+    async def poll_data(self):
+        async with aiohttp.ClientSession() as session:
+            async with session.get(self.url, params=self.params) as responce:
+                print(responce.status)
+                weather = await responce.json()
+                try:
+                    return weather['main']['temp']-273
+                except:
+                    return None
+
