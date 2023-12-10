@@ -1,6 +1,6 @@
 import aiohttp
 from config import WEATHER_API_URL
-from abstract_poller import AbstractApiPoller
+from .abstract_poller import AbstractApiPoller
 
 
 class WeatherApiPoller(AbstractApiPoller):

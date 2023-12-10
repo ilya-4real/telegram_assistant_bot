@@ -2,7 +2,6 @@ from aiogram import Router
 from aiogram.filters import Command, CommandStart
 from aiogram.types import Message
 from database.users import UsersRepository
-from APIs.weather import get_weather
 from aiogram.utils.markdown import text
 import re
 
@@ -44,5 +43,5 @@ async def user_email_handler(message: Message):
 
 @router.message(Command("weather"))
 async def weather_handler(message: Message) -> None:
-    weather = await get_weather()
+    weather = "none"
     await message.answer(weather)
