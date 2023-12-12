@@ -20,7 +20,6 @@ async def start_task_form(message: Message, state: FSMContext):
         await message.answer("You need to set your profile up")
 
 
-
 @router.message(TaskForm.setting_title)
 async def set_task_title(message: Message, state: FSMContext):
     await state.update_data(title=message.text)

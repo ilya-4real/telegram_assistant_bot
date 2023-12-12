@@ -9,7 +9,7 @@ class WeatherApiPoller(AbstractApiPoller):
         self.params = {
             "appid": key,
             **params
-        }
+        } 
 
     async def poll_data(self):
         async with aiohttp.ClientSession() as session:
