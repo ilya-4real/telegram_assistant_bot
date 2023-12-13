@@ -12,3 +12,8 @@ class TaskForm(StatesGroup):
     setting_title = State()
     setting_body = State()
     setting_expiration_date = State()
+
+
+class EmailForm(StatesGroup):
+    setting_email = State()
+    code_sent = State()

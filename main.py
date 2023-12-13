@@ -8,12 +8,13 @@ import asyncio
 
 from app.handlers.common_handlers import router as main_router
 from app.handlers.task_handlers import router as task_router
+from app.handlers.email_verify_handler import router as email_router
 
 
 async def main():
     bot = Bot(API_KEY, parse_mode=ParseMode.HTML)
     dp = Dispatcher()
-    dp.include_routers(main_router, task_router)
+    dp.include_routers(main_router, task_router, email_router)
     await dp.start_polling(bot)
 
 

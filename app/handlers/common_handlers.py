@@ -8,7 +8,7 @@ import re
 
 from database.users import UsersRepository
 from ..states import UserState
-
+from ..messages import common_message, getme_message
 
 router = Router()
 
@@ -26,20 +26,19 @@ async def start_handler(message: Message, state: FSMContext) -> None:
         await message.answer(
             f'Hello, {message.from_user.first_name}, your id is {user_id}'
             )
+        
+
+# @router.message()
+# async def common_handler(message: Message):
+#     answer_message = common_message()
+#     await message.answer(answer_message) 
 
 
 @router.message(Command("getme"))
 async def get_my_info(message: Message):
     res = await UsersRepository().get_one(id=message.from_user.id)
-    msg = text("your saved on server data is:",
-               f'user id : {res[0].id}',
-               f'username : {res[0].username}',
-               f'email : {res[0].email} ',
-               f'verified: {res[0].is_verified}',
-               f'date of registration : {res[0].registered_at}',
-               sep='\n'
-               )
-    await message.answer(msg)
+    answer = getme_message(res[0])
+    await message.answer(answer)
 
 
 @router.message(Command("addemail"))
