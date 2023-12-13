@@ -9,7 +9,7 @@ WEATHER_KEY = os.environ.get("WEATHER_API_KEY")
 CURRENCIES_KEY = os.environ.get("CURRENCY_API_KEY")
 
 SMTP_HOST = 'smtp.gmail.com'
-SMTP_PORT = '465'
+SMTP_PORT = 465
 EMAIL_SENDER = os.environ.get("EMAIL_SENDER")
 EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD")
 
