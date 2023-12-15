@@ -45,5 +45,5 @@ async def check_code(message: Message, state: FSMContext):
         else:
             await UsersRepository().set_email(message.from_user.id, user_email)
             await message.answer(
-                "Great! Your email is verified."
+                "Great! Your email is verified. "
                 "Now you can use every feature that I provide)")

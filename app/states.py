@@ -11,7 +11,9 @@ class UserState(StatesGroup):
 class TaskForm(StatesGroup):
     setting_title = State()
     setting_body = State()
-    setting_expiration_date = State()
+    setting_exp_date = State()
+    setting_exp_time = State()
+    make_sure = State()
 
 
 class EmailForm(StatesGroup):
