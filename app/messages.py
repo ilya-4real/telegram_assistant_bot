@@ -17,6 +17,7 @@ def getme_message(user_model) -> str:
         f'user id : {user_model.id}',
         f'username : {user_model.username}',
         f'email : {user_model.email} ',
+        f'city : {user_model.city} ',
         f'date of registration : {user_model.registered_at}',
         sep='\n'
     )
@@ -41,3 +42,14 @@ def all_tasks_message(tasks: list[Task]) -> str:
         list_of_strings.extend([task.title, task.expires_at])
     result = text(*list_of_strings, sep='\n')
     return result
+
+def weather_message(weather: dict) -> str:
+    msg = text(
+        'current_weather :',
+        f'temperature: {weather['main']['temp']}',
+        f'feels like: {weather['main']['feels_like']}',
+        f'pressure: {weather['main']['pressure']}',
+        f'wind speed: {weather['wind']['speed']}',
+        sep='\n'
+    )
+    return msg

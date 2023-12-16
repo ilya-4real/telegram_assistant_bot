@@ -44,6 +44,7 @@ async def check_code(message: Message, state: FSMContext):
             await message.answer("Bad numbers! Try again.")
         else:
             await UsersRepository().set_email(message.from_user.id, user_email)
+            await state.clear()
             await message.answer(
                 "Great! Your email is verified. "
                 "Now you can use every feature that I provide)")

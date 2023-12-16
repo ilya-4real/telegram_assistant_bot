@@ -2,13 +2,14 @@ from aiogram import Router
 from aiogram.filters import Command, CommandStart
 from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
-from aiogram.utils.markdown import text
 
 import re
 
 from database.users import UsersRepository
 from ..states import UserState
-from ..messages import common_message, getme_message
+from ..messages import common_message, getme_message, weather_message
+from APIs.api_gate import FacadeApiGateway
+from database.services.user_service import UsersService
 
 router = Router()
 
@@ -35,10 +36,13 @@ async def get_my_info(message: Message):
     await message.answer(answer)
 
 
-@router.message(Command("weather"), UserState.all_set)
+@router.message(Command("weather"))
 async def weather_handler(message: Message) -> None:
-    weather = "none"
-    await message.answer(weather)
+    city = await UsersService().get_city(message.from_user.id)
+    weather = await FacadeApiGateway(city).get_weather()
+    msg = weather_message(weather)
+    await message.answer(msg)
+
 
 
 @router.message(Command("dropstate"))

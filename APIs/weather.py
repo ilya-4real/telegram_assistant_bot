@@ -1,6 +1,7 @@
 import aiohttp
 from config import WEATHER_API_URL
 from .abstract_poller import AbstractApiPoller
+from json import loads
 
 
 class WeatherApiPoller(AbstractApiPoller):
@@ -17,7 +18,11 @@ class WeatherApiPoller(AbstractApiPoller):
                 print(responce.status)
                 weather = await responce.json()
                 try:
-                    return weather['main']['temp']-273
+                    return weather
                 except:
                     return None
+
+    @staticmethod            
+    def convert_to_dict(weather_data: str):
+        return loads(weather_data)
 

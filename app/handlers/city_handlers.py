@@ -3,7 +3,8 @@ from aiogram.filters import Command
 from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
 
-from states import CityForm
+from database.services.user_service import UsersService
+from ..states import CityForm
 
 
 router = Router()
@@ -17,4 +18,6 @@ async def get_city(message: Message, state: FSMContext):
 
 @router.message(CityForm.setting_city)
 async def set_city(message: Message, state: FSMContext):
-    city = message.text
+    await UsersService().set_city(message.from_user.id, message.text)
+    await state.clear()
+    await message.answer("City has been set")

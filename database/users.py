@@ -25,3 +25,9 @@ class UsersRepository(SQLAlchemyRepository):
             query = select(self.model.email).where(self.model.id == user_id)
             email = await session.execute(query)
             return email.scalar_one_or_none()
+        
+    async def get_city(self, user_id: int):
+        async with async_session_maker() as session:
+            query = select(self.model.city).where(self.model.id == user_id)
+            email = await session.execute(query)
+            return email.scalar_one_or_none()
