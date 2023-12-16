@@ -77,3 +77,10 @@ async def add_task(message: Message, state: FSMContext):
             data['date'],
             data['time']
             )
+        
+
+@router.message(Command("view_tasks"))
+async def view_all_tasks(message: Message):
+    tasks = await TaskService().get_all()
+    print(tasks)
+    await message.answer("Done")

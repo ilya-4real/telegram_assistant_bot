@@ -1,8 +1,8 @@
-"""users and tasks
+"""fixed tasks model
 
-Revision ID: bc76d33e0a9d
+Revision ID: 10777037f845
 Revises: 
-Create Date: 2023-12-03 20:19:44.068297
+Create Date: 2023-12-16 18:24:53.929059
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'bc76d33e0a9d'
+revision: str = '10777037f845'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -25,13 +25,12 @@ def upgrade() -> None:
     sa.Column('username', sa.String(), nullable=False),
     sa.Column('email', sa.String(), nullable=True),
     sa.Column('registered_at', sa.DateTime(), nullable=False),
-    sa.Column('is_verified', sa.Boolean(), nullable=False),
     sa.Column('city', sa.String(), nullable=True),
     sa.Column('is_admin', sa.Boolean(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('tasks',
-    sa.Column('id', sa.BigInteger(), nullable=False),
+    sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('title', sa.String(), nullable=True),
     sa.Column('body', sa.String(), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=False),

@@ -1,5 +1,6 @@
 from aiogram.utils.markdown import text
 from datetime import date, time
+from database.models import Task
 
 def common_message() -> str:
     msg = text(
@@ -16,7 +17,6 @@ def getme_message(user_model) -> str:
         f'user id : {user_model.id}',
         f'username : {user_model.username}',
         f'email : {user_model.email} ',
-        f'verified: {user_model.is_verified}',
         f'date of registration : {user_model.registered_at}',
         sep='\n'
     )
@@ -34,3 +34,7 @@ def check_task_message(title: str, body: str, exp_date: date, exp_time: time) ->
         sep='\n'
     )
     return msg
+
+def all_tasks_message(tasks: list[Task]) -> str:
+    for task in tasks:
+        ...

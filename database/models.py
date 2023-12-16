@@ -17,14 +17,13 @@ class User(Base):
         nullable=False, 
         default=datetime.utcnow
         )
-    is_verified: Mapped[bool] = mapped_column(default=False)
     city: Mapped[str | None]
     is_admin: Mapped[bool] = mapped_column(default=False)
 
 
 class Task(Base):
     __tablename__ = "tasks"
-    id: Mapped[pk]
+    id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str | None]
     body: Mapped[str | None]
     created_at : Mapped[datetime] = mapped_column(nullable=False, default=datetime.utcnow)
