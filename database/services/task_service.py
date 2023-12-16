@@ -11,5 +11,5 @@ class TaskService:
         exp_datetime = to_datetime(date, time)
         await self.repository.add_one(user_id=user_id, title=title, body=body, expires_at=exp_datetime)
 
-    async def get_all(self, user_id: int=0):
-        return await self.repository.get_all()
+    async def get_all(self, limit: int, offset: int):
+        return await self.repository.get_all(limit, offset)

@@ -28,12 +28,6 @@ async def start_handler(message: Message, state: FSMContext) -> None:
             )
         
 
-# @router.message()
-# async def common_handler(message: Message):
-#     answer_message = common_message()
-#     await message.answer(answer_message) 
-
-
 @router.message(Command("getme"))
 async def get_my_info(message: Message):
     res = await UsersRepository().get_one(id=message.from_user.id)
@@ -41,18 +35,20 @@ async def get_my_info(message: Message):
     await message.answer(answer)
 
 
-@router.message(Command("addemail"))
-async def user_email_handler(message: Message):
-    found_email = re.search(r"( .*@\w+\.\w+)", message.text)
-    if found_email is not None:
-        ready_email = found_email.group().strip()
-        await UsersRepository().set_email(message.from_user.id, ready_email)
-        await message.answer("successfully added your email!")
-    else:
-        await message.answer("invalid email. try again")
-
-
 @router.message(Command("weather"), UserState.all_set)
 async def weather_handler(message: Message) -> None:
     weather = "none"
     await message.answer(weather)
+
+
+@router.message(Command("dropstate"))
+async def drop_state(message: Message, state: FSMContext):
+    await state.clear()
+    await message.answer("Okay, now you don't have a state")
+
+
+# @router.message()
+# async def common_handler(message: Message):
+#     answer_message = common_message()
+#     await message.answer(answer_message) 
+

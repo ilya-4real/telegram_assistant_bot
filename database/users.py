@@ -1,3 +1,4 @@
+from pyexpat import model
 from .utils.repository import SQLAlchemyRepository
 from .models import User, Task
 from .database import async_session_maker
@@ -19,7 +20,8 @@ class UsersRepository(SQLAlchemyRepository):
             current_user.city = city
             await session.commit()
 
-
-class TasksRepository(SQLAlchemyRepository):
-    model = Task
-
+    async def get_email(self, user_id: int):
+        async with async_session_maker() as session:
+            query = select(self.model.email).where(self.model.id == user_id)
+            email = await session.execute(query)
+            return email.scalar_one_or_none()

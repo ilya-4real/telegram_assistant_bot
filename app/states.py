@@ -19,3 +19,7 @@ class TaskForm(StatesGroup):
 class EmailForm(StatesGroup):
     setting_email = State()
     code_sent = State()
+
+
+class CityForm(StatesGroup):
+    setting_city = State()
