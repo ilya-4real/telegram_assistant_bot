@@ -5,7 +5,7 @@ class TasksRepository(SQLAlchemyOneToManyRepository):
     model = Task
     foreign_model = User
 
-    async def get_all(self, limit: int, offset: int, user_id: int):
+    async def get_all_tasks(self, limit: int, offset: int, user_id: int):
         return await self.select_related(
             limit, 
             offset, 

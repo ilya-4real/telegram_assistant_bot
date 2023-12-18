@@ -53,3 +53,10 @@ def weather_message(weather: dict) -> str:
         sep='\n'
     )
     return msg
+
+
+def get_cur_message(rates: dict[str, float]):
+    list_of_curs = []
+    for i, k in rates.items():
+        list_of_curs.append(f'{i} : {k}')
+        return text(*list_of_curs, sep='\n')

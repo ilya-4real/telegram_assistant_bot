@@ -3,8 +3,9 @@ from .weather import WeatherApiPoller
 from config import WEATHER_KEY, CURRENCIES_KEY
 
 class FacadeApiGateway:
-    def __init__(self, city: str) -> None:
-        self.weather_poller = WeatherApiPoller(WEATHER_KEY, q=city, units='metric')
+    def __init__(self) -> None:
+        self.weather_poller = WeatherApiPoller(WEATHER_KEY, units='metric')
+        self.currency_poller = CurrencyApiPoller(CURRENCIES_KEY)
         # self.currency_poller = CurrencyApiPoller(CURRENCIES_KEY, symbols=','.join(curencies))
 
     async def get_apis_data(self):
@@ -20,7 +21,8 @@ class FacadeApiGateway:
         weather = await self.weather_poller.poll_data()
         return weather
     
-    async def get_currencies(self) -> dict:
-        rates = await self.currency_poller.poll_data()
+    async def get_currencies(self, symbols: list[str]) -> dict:
+        str_symbols = ','.join(symbols)
+        rates = await self.currency_poller.poll_data(str_symbols)
         return {"rates": rates}
 

@@ -75,6 +75,6 @@ async def add_task(message: Message, state: FSMContext):
 
 @router.message(Command("view_tasks"))
 async def view_all_tasks(message: Message):
-    tasks = await TaskService().get_all(5, 0, message.from_user.id)
+    tasks = await TaskService().get_all_tasks(5, 0, message.from_user.id)
     msg = messages.all_tasks_message(tasks)
     await message.answer(msg)

@@ -33,7 +33,7 @@ async def weather_handler(message: Message) -> None:
     city = await UsersService().get_city(message.from_user.id)
     weather = await FacadeApiGateway(city).get_weather()
     msg = messages.weather_message(weather)
-    await message.answer_photo("AgACAgIAAxkBAAIC8WWAjfQJlYSMn0EiwforOJUAAV_xCQAC688xG2VLCEgsDuhwgiBt0gEAAwIAA20AAzME", caption=msg)
+    await message.answer_photo("?", caption=msg)
 
 
 @router.message(Command("dropstate"))
@@ -42,8 +42,8 @@ async def drop_state(message: Message, state: FSMContext):
     await message.answer("Okay, now you don't have a state")
 
 
-@router.message()
-async def common_handler(message: Message):
-    answer_message = messages.common_message()
-    await message.answer(answer_message)
+# @router.message()
+# async def common_handler(message: Message):
+#     answer_message = messages.common_message()
+#     await message.answer(answer_message)
 

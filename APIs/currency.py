@@ -5,13 +5,13 @@ from .exceptions import InvalidCurrencies
 
 
 class CurrencyApiPoller(AbstractApiPoller):
-    def __init__(self, key, **params) -> None:
+    def __init__(self, key) -> None:
         self.url = CURRENCIES_API_URL
         self.params = {
             "access_key": key,
-            **params
         }
-    async def poll_data(self):
+    async def poll_data(self, symbols: str):
+        self.params['symbols'] = symbols
         async with aiohttp.ClientSession() as session:
             async with session.get(self.url, params=self.params) as responce:
                 currencies = await responce.json()

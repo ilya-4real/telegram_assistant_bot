@@ -23,3 +23,7 @@ class EmailForm(StatesGroup):
 
 class CityForm(StatesGroup):
     setting_city = State()
+
+class CurrencyForm(StatesGroup):
+    setting_currency = State()
+    make_sure = State()
