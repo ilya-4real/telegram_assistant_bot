@@ -1,6 +1,7 @@
 import aiohttp
 from config import CURRENCIES_API_URL
 from .abstract_poller import AbstractApiPoller
+from .exceptions import InvalidCurrencies
 
 
 class CurrencyApiPoller(AbstractApiPoller):
@@ -14,7 +15,6 @@ class CurrencyApiPoller(AbstractApiPoller):
         async with aiohttp.ClientSession() as session:
             async with session.get(self.url, params=self.params) as responce:
                 currencies = await responce.json()
-                try:
-                    return currencies['rates']
-                except:
-                    return None
+                if not currencies:
+                    raise InvalidCurrencies("Bad currency symbol")
+                return currencies['rates']

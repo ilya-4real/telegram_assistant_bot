@@ -30,3 +30,17 @@ class Task(Base):
     expires_at : Mapped[datetime | None]
     done: Mapped[bool] = mapped_column(nullable=False, default=False) 
     user_id: Mapped[int] = mapped_column(ForeignKey("users_table.id", ondelete="CASCADE"))
+
+
+class Image(Base):
+    __tablename__ = "images"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    tg_id: Mapped[str] = mapped_column(nullable=False)
+    title: Mapped[str] = mapped_column(nullable=False)
+
+
+class CurrencySymbol(Base):
+    __tablename__ = "currency_symbols"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    symbol: Mapped[str] = mapped_column(nullable=False)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users_table.id", ondelete="CASCADE"))

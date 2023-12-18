@@ -25,7 +25,6 @@ def check_date(date: str):
         return weeks_n_days_to_datetime(int(found.group()[0])*7)
     elif found.groups()[2]:
         return weeks_n_days_to_datetime(int(found.group()[0]))
-    
 
 
 def check_time(exp_time: str):
@@ -35,7 +34,3 @@ def check_time(exp_time: str):
         minutes = int(found.group()[3:5])
         return time(hours, minutes)
     raise ValueError("Invalid time format")
-
-
-def to_datetime(date: date, time: time):
-    return datetime.combine(date, time)

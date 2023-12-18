@@ -3,7 +3,7 @@ from aiogram.filters import Command
 from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
 
-from database.services.user_service import UsersService
+from services.user_service import UsersService
 from ..states import CityForm
 
 

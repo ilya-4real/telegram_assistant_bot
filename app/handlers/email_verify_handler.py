@@ -2,10 +2,10 @@ from aiogram import Router
 from aiogram.filters import Command
 from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
-from services.email_verification import check_email, send_email
+from services.email_service import check_email, send_email
 
 from ..states import EmailForm
-from database.users import UsersRepository
+from database.repositories.users import UsersRepository
 
 router = Router()
 

@@ -3,36 +3,28 @@ from aiogram.filters import Command, CommandStart
 from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
 
-import re
-
-from database.users import UsersRepository
-from ..states import UserState
-from ..messages import common_message, getme_message, weather_message
+from .. import messages
 from APIs.api_gate import FacadeApiGateway
-from database.services.user_service import UsersService
+from services.user_service import UsersService
 
 router = Router()
 
 
 @router.message(CommandStart())
-async def start_handler(message: Message, state: FSMContext) -> None:
-    user_id = await UsersRepository().add_one(
-        id=message.from_user.id,
+async def start_handler(message: Message) -> None:
+    user_id = await UsersService().add_user(
+        user_id=message.from_user.id,
         username=message.from_user.username
         )
-    if user_id == 'already exists':
-        await message.answer(f'your id {user_id}')
-    else:
-        await state.set_state(UserState.not_set)
-        await message.answer(
-            f'Hello, {message.from_user.first_name}, your id is {user_id}'
-            )
+    await message.answer(
+        f'Hello, {message.from_user.first_name}, your id is {user_id}'
+        )
         
 
 @router.message(Command("getme"))
 async def get_my_info(message: Message):
-    res = await UsersRepository().get_one(id=message.from_user.id)
-    answer = getme_message(res[0])
+    res = await UsersService().get_user(message.from_user.id)
+    answer = messages.getme_message(res)
     await message.answer(answer)
 
 
@@ -40,9 +32,8 @@ async def get_my_info(message: Message):
 async def weather_handler(message: Message) -> None:
     city = await UsersService().get_city(message.from_user.id)
     weather = await FacadeApiGateway(city).get_weather()
-    msg = weather_message(weather)
-    await message.answer(msg)
-
+    msg = messages.weather_message(weather)
+    await message.answer_photo("AgACAgIAAxkBAAIC8WWAjfQJlYSMn0EiwforOJUAAV_xCQAC688xG2VLCEgsDuhwgiBt0gEAAwIAA20AAzME", caption=msg)
 
 
 @router.message(Command("dropstate"))
@@ -51,8 +42,8 @@ async def drop_state(message: Message, state: FSMContext):
     await message.answer("Okay, now you don't have a state")
 
 
-# @router.message()
-# async def common_handler(message: Message):
-#     answer_message = common_message()
-#     await message.answer(answer_message) 
+@router.message()
+async def common_handler(message: Message):
+    answer_message = messages.common_message()
+    await message.answer(answer_message)
 

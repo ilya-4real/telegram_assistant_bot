@@ -39,7 +39,7 @@ def check_task_message(title: str, body: str, exp_date: date, exp_time: time) ->
 def all_tasks_message(tasks: list[Task]) -> str:
     list_of_strings = []
     for task in tasks:
-        list_of_strings.extend([task.title, task.expires_at])
+        list_of_strings.extend([f'<b>{task.title} [{task.done}]</b>', f'{task.expires_at}\n'])
     result = text(*list_of_strings, sep='\n')
     return result
 
