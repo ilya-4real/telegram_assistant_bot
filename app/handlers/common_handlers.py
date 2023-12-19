@@ -19,7 +19,7 @@ async def start_handler(message: Message) -> None:
     await message.answer(
         f'Hello, {message.from_user.first_name}, your id is {user_id}'
         )
-        
+
 
 @router.message(Command("getme"))
 async def get_my_info(message: Message):
@@ -46,4 +46,3 @@ async def drop_state(message: Message, state: FSMContext):
 # async def common_handler(message: Message):
 #     answer_message = messages.common_message()
 #     await message.answer(answer_message)
-

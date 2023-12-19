@@ -10,6 +10,7 @@ class CurrencyApiPoller(AbstractApiPoller):
         self.params = {
             "access_key": key,
         }
+
     async def poll_data(self, symbols: str):
         self.params['symbols'] = symbols
         async with aiohttp.ClientSession() as session:
