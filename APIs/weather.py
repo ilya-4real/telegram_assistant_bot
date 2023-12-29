@@ -18,7 +18,7 @@ class WeatherApiPoller(AbstractApiPoller):
             async with session.get(self.url, params=self.params) as responce:
                 print(responce.status)
                 weather = await responce.json()
-                if not weather:
+                if weather.get('error'):
                     raise InvalidCity("There is no weather for your city")
                 return weather
 

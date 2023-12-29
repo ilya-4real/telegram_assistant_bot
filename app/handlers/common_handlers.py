@@ -5,14 +5,14 @@ from aiogram.fsm.context import FSMContext
 
 from .. import messages
 from APIs.api_gate import FacadeApiGateway
-from services.user_service import UsersService
+from services import user_service, currency_service
 
 router = Router()
 
 
 @router.message(CommandStart())
 async def start_handler(message: Message) -> None:
-    user_id = await UsersService().add_user(
+    user_id = await user_service.UsersService().add_user(
         user_id=message.from_user.id,
         username=message.from_user.username
         )
@@ -23,17 +23,21 @@ async def start_handler(message: Message) -> None:
 
 @router.message(Command("getme"))
 async def get_my_info(message: Message):
-    res = await UsersService().get_user(message.from_user.id)
-    answer = messages.getme_message(res)
+    user = user_service.UsersService()
+    currency = currency_service.CurrencyService()
+    user = await user.get_user(message.from_user.id)
+    symbols = await currency.get_user_currency_symbols(message.from_user.id)
+    answer = messages.getme_message(user, symbols)
     await message.answer(answer)
 
 
 @router.message(Command("weather"))
 async def weather_handler(message: Message) -> None:
-    city = await UsersService().get_city(message.from_user.id)
+    city = await user_service.UsersService().get_city(message.from_user.id)
+    print(city)
     weather = await FacadeApiGateway(city).get_weather()
     msg = messages.weather_message(weather)
-    await message.answer_photo("?", caption=msg)
+    await message.answer(msg)
 
 
 @router.message(Command("dropstate"))
