@@ -1,6 +1,7 @@
 from aiogram.utils.markdown import text
 from datetime import date, time
 from database.models import Task, User
+from APIs import ApisData
 
 
 def common_message() -> str:
@@ -72,3 +73,14 @@ def get_cur_message(rates: dict[str, float]):
         *list_of_curs,
         sep='\n'
         )
+
+
+def todays_info_message(data: ApisData) -> str:
+    weather_msg = weather_message(data.weather)
+    cur_msg = get_cur_message(data.currency)
+    msg = text(
+        weather_msg,
+        cur_msg,
+        sep='\n'
+    )
+    return msg

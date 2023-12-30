@@ -6,16 +6,17 @@ from .exceptions import InvalidCity
 
 
 class WeatherApiPoller(AbstractApiPoller):
-    def __init__(self, key, **params) -> None:
+    def __init__(self, key) -> None:
         self.url = WEATHER_API_URL
-        self.params = {
-            "appid": key,
-            **params
-        } 
+        self.key = key
 
-    async def poll_data(self):
+    async def poll_data(self, **query_params: str) -> dict[str, str | float]:
+        params = {
+            "appid": self.key,
+            **query_params
+        }
         async with aiohttp.ClientSession() as session:
-            async with session.get(self.url, params=self.params) as responce:
+            async with session.get(self.url, params=params) as responce:
                 print(responce.status)
                 weather = await responce.json()
                 if weather.get('error'):

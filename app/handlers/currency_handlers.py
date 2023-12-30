@@ -6,7 +6,7 @@ from aiogram.filters import Command
 
 from ..keyboards import build_keyboard
 from .. import messages
-from services.currency_service import CurrencyService
+from services.api_services import CurrencyService
 
 
 router = Router()

@@ -1,5 +1,4 @@
 
-
 class InvalidCity(Exception):
     pass
 

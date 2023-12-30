@@ -4,8 +4,7 @@ from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
 
 from .. import messages
-from APIs.api_gate import FacadeApiGateway
-from services import user_service, currency_service
+from services import api_services, user_service
 
 router = Router()
 
@@ -24,18 +23,25 @@ async def start_handler(message: Message) -> None:
 @router.message(Command("getme"))
 async def get_my_info(message: Message):
     user = user_service.UsersService()
-    currency = currency_service.CurrencyService()
+    currency = api_services.CurrencyService()
     user = await user.get_user(message.from_user.id)
     symbols = await currency.get_user_currency_symbols(message.from_user.id)
     answer = messages.getme_message(user, symbols)
     await message.answer(answer)
 
 
+@router.message(Command('show_info'))
+async def get_todays_info(message: Message):
+    user_id = message.from_user.id 
+    data = await api_services.InfoService().get_info(user_id)
+    msg = messages.todays_info_message(data)
+    await message.answer(msg)
+
+
 @router.message(Command("weather"))
 async def weather_handler(message: Message) -> None:
-    city = await user_service.UsersService().get_city(message.from_user.id)
-    print(city)
-    weather = await FacadeApiGateway(city).get_weather()
+    user_id = message.from_user.id
+    weather = await api_services.WeatherService().get_weather(user_id)
     msg = messages.weather_message(weather)
     await message.answer(msg)
 
