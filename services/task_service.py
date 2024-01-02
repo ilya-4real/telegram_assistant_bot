@@ -18,5 +18,10 @@ class TaskService:
         print(result)
         return result != None
     
-    async def delete_task(self, title: str):
-        await self.repository.delete_one(self.repository.model.title, title)
+    async def delete_task(self, task_id: int):
+        await self.repository.delete_one(self.repository.model.id, task_id)
+
+    async def get_task(self, task_id: int):
+        task = await self.repository.get_one(self.repository.model.id, task_id)
+        return task
+    

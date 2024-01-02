@@ -4,7 +4,7 @@ import random
 import re
 from email.message import EmailMessage
 
-from .exceptions import InvalidEmail
+from exceptions import InvalidEmail
 from config import EMAIL_SENDER, EMAIL_PASSWORD, SMTP_HOST, SMTP_PORT
 
 

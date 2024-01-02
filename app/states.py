@@ -10,12 +10,7 @@ class TaskForm(StatesGroup):
 
 
 class TaskEditForm(StatesGroup):
-    choosing_task = State()
-
-
-class TaskDeleteForm(StatesGroup):
-    choosing_task = State()
-    delete_task = State()
+    editing_task = State()
 
 
 class EmailForm(StatesGroup):

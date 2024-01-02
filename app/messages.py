@@ -9,7 +9,9 @@ def common_message() -> str:
     msg = text(
         'Hello!',
         'I am your personal assistant.',
-        'Now I can show you weather, currency rates and manage your tasks',
+        'Now I can show you weather /weather',
+        'currency rates /currency',
+        'and manage your tasks /tasks',
         sep='\n'
     )
     return msg
@@ -88,6 +90,16 @@ def todays_info_message(data: ApisData) -> str:
     msg = text(
         weather_msg,
         cur_msg,
+        sep='\n'
+    )
+    return msg
+
+def task_detail(task: Task):
+    msg = text(
+        f'title: {task.title}',
+        f'description: {task.body}',
+        f'expires: {task.expires_at}\n',
+        'What would you like to change?', 
         sep='\n'
     )
     return msg

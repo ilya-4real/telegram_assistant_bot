@@ -4,14 +4,14 @@ from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
 
 from .. import messages
-from services import api_services, user_service
+from services import CurrencyService, WeatherService, InfoService, UsersService
 
 router = Router()
 
 
 @router.message(CommandStart())
 async def start_handler(message: Message) -> None:
-    user_id = await user_service.UsersService().add_user(
+    user_id = await UsersService.add_user(
         user_id=message.from_user.id,
         username=message.from_user.username
         )
@@ -22,8 +22,8 @@ async def start_handler(message: Message) -> None:
 
 @router.message(Command("getme"))
 async def get_my_info(message: Message):
-    user = user_service.UsersService()
-    currency = api_services.CurrencyService()
+    user = UsersService
+    currency = CurrencyService()
     user = await user.get_user(message.from_user.id)
     symbols = await currency.get_user_currency_symbols(message.from_user.id)
     answer = messages.getme_message(user, symbols)
@@ -33,7 +33,7 @@ async def get_my_info(message: Message):
 @router.message(Command('show_info'))
 async def get_todays_info(message: Message):
     user_id = message.from_user.id 
-    data = await api_services.InfoService().get_info(user_id)
+    data = await InfoService().get_info(user_id)
     msg = messages.todays_info_message(data)
     await message.answer(msg)
 
@@ -41,7 +41,7 @@ async def get_todays_info(message: Message):
 @router.message(Command("weather"))
 async def weather_handler(message: Message) -> None:
     user_id = message.from_user.id
-    weather = await api_services.WeatherService().get_weather(user_id)
+    weather = await WeatherService().get_weather(user_id)
     msg = messages.weather_message(weather)
     await message.answer(msg)
 
@@ -50,3 +50,8 @@ async def weather_handler(message: Message) -> None:
 async def drop_state(message: Message, state: FSMContext):
     await state.clear()
     await message.answer("Okay, now you don't have a state")
+
+
+@router.message()
+async def send_common_msg(message: Message):
+    await message.answer(messages.common_message())

@@ -1,27 +1,34 @@
+import re
+
 from database.repositories.users import UsersRepository
 
 
 class UsersService:
-    def __init__(self) -> None:
-        self.repository = UsersRepository()
+    repository = UsersRepository()
 
-    async def add_user(self, user_id: int, username: str):
-        result = await self.repository.add_one(id=user_id, username=username)
+    @classmethod
+    async def add_user(cls, user_id: int, username: str):
+        result = await cls.repository.add_one(id=user_id, username=username)
 
-    async def check_email(self, user_id: int):
-        result = await self.repository.get_user(user_id)
+    @classmethod
+    async def check_email(cls, user_id: int):
+        result = await cls.repository.get_user(user_id)
         return result.email
     
-    async def set_email(self,user_id: int, email: str) -> None:
-        await self.repository.update_email(user_id, email)
+    @classmethod
+    async def set_email(cls,user_id: int, email: str) -> None:
+        await cls.repository.update_email(user_id, email)
 
-    async def set_city(self, user_id: int, city: str):
-        result = await self.repository.update_city(user_id, city)
+    @classmethod
+    async def set_city(cls, user_id: int, city: str):
+        result = await cls.repository.update_city(user_id, city)
 
-    async def get_city(self, user_id: int):
-        user =  await self.repository.get_user(user_id)
+    @classmethod
+    async def get_city(cls, user_id: int):
+        user =  await cls.repository.get_user(user_id)
         return user.city
     
-    async def get_user(self, user_id: int):
-        return await self.repository.get_user(user_id)
+    @classmethod
+    async def get_user(cls, user_id: int):
+        return await cls.repository.get_user(user_id)
     

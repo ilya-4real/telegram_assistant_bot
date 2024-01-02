@@ -38,6 +38,7 @@ class CurrencyService:
     
 
 class WeatherService:
+    """Service that accesses weather API and database"""
     def __init__(self) -> None:
         self.api_gateway = api_gate.FacadeApiGateway()
         self.repository = UsersRepository()
@@ -49,11 +50,12 @@ class WeatherService:
     
 
 class InfoService:
+    """Service that Manages both weather and currency API"""
     def __init__(self) -> None:
         self.user_repository = UsersRepository()
         self.currency_repository = CurrencyRepository()
         self.api_gateway = api_gate.FacadeApiGateway()
-
+    
     async def get_info(self, user_id: int) -> ApisData:
         user = await self.user_repository.get_user(user_id)
         cur_syms = await self.currency_repository.get_symbols(user_id)

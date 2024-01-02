@@ -2,7 +2,7 @@ import aiohttp
 from config import WEATHER_API_URL
 from .abstract_poller import AbstractApiPoller
 from json import loads
-from .exceptions import InvalidCity
+from exceptions import InvalidCity
 
 
 class WeatherApiPoller(AbstractApiPoller):

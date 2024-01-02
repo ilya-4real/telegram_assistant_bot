@@ -3,8 +3,8 @@ from aiogram.filters import Command
 from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
 
-from services import email_service, user_service
-from services.exceptions import InvalidEmail
+from services import UsersService, send_email
+from exceptions.service_exceptions import InvalidEmail
 from ..states import EmailForm
 
 router = Router()
@@ -19,7 +19,7 @@ async def start_email_setting(message: Message, state: FSMContext):
 @router.message(EmailForm.setting_email)
 async def set_email(message: Message, state: FSMContext):
     try:
-        code = await email_service.send_email(message.from_user.username, message.text)
+        code = await send_email(message.from_user.username, message.text)
         await state.update_data(verification_code=str(code), user_email=message.text)
         await state.set_state(EmailForm.code_sent)
         await message.answer("Good! I've sent you an email with a code."
@@ -42,7 +42,7 @@ async def check_code(message: Message, state: FSMContext):
         if sent_code != user_sent_code:
             await message.answer("Bad numbers! Try again.")
         else:
-            await user_service.UsersService().set_email(message.from_user.id, user_email)
+            await UsersService.set_email(message.from_user.id, user_email)
             await state.clear()
             await message.answer(
                 "Great! Your email is verified. "
