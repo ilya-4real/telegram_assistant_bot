@@ -12,3 +12,11 @@ class TaskService:
 
     async def get_all_tasks(self, limit: int, offset: int, user_id: int):
         return await self.repository.get_all_tasks(limit, offset, user_id)
+    
+    async def check_task(self, title):
+        result = await self.repository.get_one(self.repository.model.title, title)
+        print(result)
+        return result != None
+    
+    async def delete_task(self, title: str):
+        await self.repository.delete_one(self.repository.model.title, title)

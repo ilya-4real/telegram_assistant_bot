@@ -45,9 +45,9 @@ class SQLAlchemyRepository(AbstractRepository):
             res = await session.execute(query)
             return res.scalar_one_or_none()
 
-    async def delete_one(self, id: int):
+    async def delete_one(self, filter, filter_value):
         async with async_session_maker() as session:
-            stmt = delete(self.model).where(self.model.id == id)
+            stmt = delete(self.model).where(filter == filter_value)
             res = await session.execute(stmt)
             await session.commit()
 

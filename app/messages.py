@@ -5,6 +5,7 @@ from APIs import ApisData
 
 
 def common_message() -> str:
+    """creates message for all unhandled messages"""
     msg = text(
         'Hello!',
         'I am your personal assistant.',
@@ -15,6 +16,7 @@ def common_message() -> str:
 
 
 def getme_message(user_model: User, currency_symbols: str) -> str:
+    """creates message for user data"""
     msg = text(
         "your saved on server data is:",
         f'user id : {user_model.id}',
@@ -30,6 +32,7 @@ def getme_message(user_model: User, currency_symbols: str) -> str:
 
 def check_task_message(title: str, body: str, exp_date: date, exp_time: time) \
      -> str:
+    """creates message to check task data"""
     day = str(exp_date)
     time = str(exp_time)
     msg = text(
@@ -43,16 +46,18 @@ def check_task_message(title: str, body: str, exp_date: date, exp_time: time) \
 
 
 def all_tasks_message(tasks: list[Task]) -> str:
+    """creates message for listing tasks"""
     list_of_strings = []
     for task in tasks:
         list_of_strings.extend(
-            [f'<b>{task.title} [{task.done}]</b>', f'{task.expires_at}\n']
+            [f'<b>{task.title}\n{task.body[:20]}</b>', f'{task.expires_at}\n']
             )
     result = text(*list_of_strings, sep='\n')
     return result
 
 
 def weather_message(weather: dict) -> str:
+    """creates message for weather"""
     msg = text(
         '<b>Current weather</b>',
         f'temperature: {weather['main']['temp']}',
@@ -64,7 +69,8 @@ def weather_message(weather: dict) -> str:
     return msg
 
 
-def get_cur_message(rates: dict[str, float]):
+def get_cur_message(rates: dict[str, float]) -> str:
+    """creates message for currency rates"""
     list_of_curs = []
     for i, k in rates.items():
         list_of_curs.append(f'{i} : {k}')
@@ -76,6 +82,7 @@ def get_cur_message(rates: dict[str, float]):
 
 
 def todays_info_message(data: ApisData) -> str:
+    """creates message combined of weather and currency rates"""
     weather_msg = weather_message(data.weather)
     cur_msg = get_cur_message(data.currency)
     msg = text(
