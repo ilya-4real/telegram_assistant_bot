@@ -16,7 +16,7 @@ def format_to_datetime(datetimeformat: str):
 
 
 def check_date(date: str):
-    found = re.search(r'(\d\d-\d\d-\d\d)|(\d weeks?)|(\d days?)', date)
+    found = re.search(r'(\d\d.\d\d.\d\d)|(\d weeks?)|(\d days?)', date)
     if not found:
         raise ValueError("Invalid date format")
     if found.groups()[0]:

@@ -4,13 +4,15 @@ import random
 import re
 from email.message import EmailMessage
 
+from .exceptions import InvalidEmail
 from config import EMAIL_SENDER, EMAIL_PASSWORD, SMTP_HOST, SMTP_PORT
 
 
 def check_email(email: str) -> str | None:
-    found_email = re.search(r"(.+@.+\..+)", email)
-    ready_email = found_email.group().strip()
-    return ready_email
+    found_email = re.search(r"^.+@.+\..+$", email)
+    if not found_email:
+        raise InvalidEmail("Something wrong with your email. Try again")
+    return found_email.string
 
 
 def generate_verification_code():
@@ -18,6 +20,7 @@ def generate_verification_code():
     for _ in range(6):
         code += str(random.randint(0, 9))
     return code
+
 
 def get_email_template(username: str, user_email: str, code: str):
     print(type(user_email))
@@ -36,9 +39,11 @@ def get_email_template(username: str, user_email: str, code: str):
     )
     return message
 
+
 async def send_email(username: str, user_email: str):
+    email = check_email(user_email)
     code = generate_verification_code()
-    message = get_email_template(username, user_email, code)
+    message = get_email_template(username, email, code)
     await aiosmtplib.send(
         message,
         hostname=SMTP_HOST,

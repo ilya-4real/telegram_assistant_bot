@@ -12,6 +12,9 @@ class UsersService:
         result = await self.repository.get_user(user_id)
         return result.email
     
+    async def set_email(self,user_id: int, email: str) -> None:
+        await self.repository.update_email(user_id, email)
+
     async def set_city(self, user_id: int, city: str):
         result = await self.repository.update_city(user_id, city)
 

@@ -50,9 +50,3 @@ async def weather_handler(message: Message) -> None:
 async def drop_state(message: Message, state: FSMContext):
     await state.clear()
     await message.answer("Okay, now you don't have a state")
-
-
-# @router.message()
-# async def common_handler(message: Message):
-#     answer_message = messages.common_message()
-#     await message.answer(answer_message)
