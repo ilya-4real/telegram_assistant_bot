@@ -28,7 +28,7 @@ class Task(Base):
     body: Mapped[str | None]
     created_at : Mapped[datetime] = mapped_column(nullable=False, default=datetime.utcnow)
     expires_at : Mapped[datetime | None]
-    done: Mapped[bool] = mapped_column(nullable=False, default=False) 
+    job_id: Mapped[str] 
     user_id: Mapped[int] = mapped_column(ForeignKey("users_table.id", ondelete="CASCADE"))
 
 

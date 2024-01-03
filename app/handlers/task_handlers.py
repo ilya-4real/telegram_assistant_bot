@@ -1,15 +1,18 @@
+from datetime import datetime
 from aiogram import Router, F
 from aiogram.filters import Command
 from aiogram.types import Message, ReplyKeyboardRemove
 from aiogram.fsm.context import FSMContext
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from .. import states
-from services import check_date, check_time, TaskService, UsersService
+from services import check_date, check_time, TaskService, UsersService, ApschedulerService
 from .. import messages
 from ..keyboards import build_keyboard, tasks_kb
 from config import TASKS_PAGE_SIZE
 
 router = Router()
+scheduler = AsyncIOScheduler()
 
 
 @router.message(Command("add_task"))
@@ -72,15 +75,26 @@ async def set_task_time(message: Message, state: FSMContext):
 @router.message(states.TaskForm.make_sure)
 async def add_task(message: Message, state: FSMContext):
     if message.text == 'Yes':
-        data = await state.get_data()  
+        data = await state.get_data()
+        date = data['exp_date']
+        time = data['exp_time']
+        job_id = await ApschedulerService(scheduler).set_job(
+            TaskService().combine_date_time(date, time), 
+            message.bot, 
+            message.chat.id, 
+            data['title']
+            )
         await TaskService().add_task(
-            message.from_user.id, 
+            message.from_user.id,
+            job_id=job_id, 
             **data
             )
+        
         await message.answer(
             "Good. The task has been added",
             reply_markup=ReplyKeyboardRemove()
             )
+
     else:
         await message.answer(
             "Okey. Try to add task again",

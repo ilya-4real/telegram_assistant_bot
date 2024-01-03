@@ -1,8 +1,8 @@
-"""alter image
+"""task jobs
 
-Revision ID: 740ec98ab8d8
+Revision ID: ecc6e9dbecb6
 Revises: 
-Create Date: 2024-01-03 14:22:28.576511
+Create Date: 2024-01-03 20:44:46.481767
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '740ec98ab8d8'
+revision: str = 'ecc6e9dbecb6'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -48,7 +48,7 @@ def upgrade() -> None:
     sa.Column('body', sa.String(), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.Column('expires_at', sa.DateTime(), nullable=True),
-    sa.Column('done', sa.Boolean(), nullable=False),
+    sa.Column('job_id', sa.String(), nullable=False),
     sa.Column('user_id', sa.BigInteger(), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['users_table.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')

@@ -5,6 +5,7 @@ import logging
 import sys
 from config import API_KEY
 import asyncio
+from app.handlers.task_handlers import scheduler 
 
 from app.handlers import routers
 
@@ -13,6 +14,7 @@ async def main():
     bot = Bot(API_KEY, parse_mode=ParseMode.HTML)
     dp = Dispatcher()
     dp.include_routers(*routers)
+    scheduler.start()
     await dp.start_polling(bot)
 
 
