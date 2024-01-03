@@ -3,19 +3,21 @@ import re
 
 
 def weeks_n_days_to_datetime(days: int) -> date:
+    """converts format like '2 weeks' or '3 days' to python date"""
     result_date = datetime.today() + timedelta(days)
     return result_date.date()
 
 
-def format_to_datetime(datetimeformat: str):
-    date_list = datetimeformat.split('-')
-    day = int(date_list[0])
-    month = int(date_list[1])
-    year = 2000 + int(date_list[2])
+def format_to_datetime(datetimeformat: str) -> date:
+    """converts format like DD-MM-YY to python date"""
+    day = int(datetimeformat[:2])
+    month = int(datetimeformat[3:5])
+    year = 2000 + int(datetimeformat[6:8])
     return date(year, month, day)
 
 
-def check_date(date: str):
+def check_date(date: str) -> date:
+    """checks if the time entered correctly"""
     found = re.search(r'(\d\d.\d\d.\d\d)|(\d weeks?)|(\d days?)', date)
     if not found:
         raise ValueError("Invalid date format")
@@ -27,7 +29,8 @@ def check_date(date: str):
         return weeks_n_days_to_datetime(int(found.group()[0]))
 
 
-def check_time(exp_time: str):
+def check_time(exp_time: str) -> time:
+    """checks if the time entered correctly"""
     found = re.search(r'\d\d.\d\d', exp_time)
     if found:
         hours = int(found.group()[0:2])

@@ -3,4 +3,4 @@ from .api_exceptions import (
     InvalidCurrencies
 )
 
-from .service_exceptions import InvalidEmail
+from .service_exceptions import InvalidEmail, UserCurrencyNotSet

@@ -7,6 +7,7 @@ from aiogram.filters import Command
 from ..keyboards import build_keyboard
 from .. import messages
 from services import CurrencyService
+from exceptions import UserCurrencyNotSet
 
 
 router = Router()
@@ -40,26 +41,20 @@ async def make_sure_currency(message: Message, state: FSMContext):
             'The symbol has been added to your profile',
             reply_markup=ReplyKeyboardRemove()
             )
+        await state.clear()
     else:
-        await state.set_state(CurrencyForm.setting_currency)
+        await state.clear()
         await message.answer(
-            "Okey, send me currency symbol again.",
+            "Okey, Try again later.",
             reply_markup=ReplyKeyboardRemove()
             )
 
 
-@router.message(Command('view_currencies'))
-async def get_user_currency_symbols(message: Message):
-    symbols = await CurrencyService().get_user_symbols(
-        user_id=message.from_user.id
-        )
-    print(symbols)
-    await message.answer("your symbols are")
-
-
-@router.message(Command("currencies"))
+@router.message(Command("currency"))
 async def get_currency_rates(message: Message):
-    rates = await CurrencyService().get_currency_rates(message.from_user.id)
-    print(rates)
-    msg = messages.get_cur_message(rates)
-    await message.answer(msg)
+    try:
+        rates = await CurrencyService().get_currency_rates(message.from_user.id)
+        msg = messages.get_cur_message(rates)
+        await message.answer(msg)
+    except UserCurrencyNotSet as e:
+        await message.answer(str(e))

@@ -1,9 +1,10 @@
 import re
 
+from APIs import api_gate, ApisData
 from database.repositories.users import UsersRepository
 from database.repositories.currencies import CurrencyRepository
 from database.models import CurrencySymbol
-from APIs import api_gate, ApisData
+from exceptions import UserCurrencyNotSet
 
 
 class CurrencyService:
@@ -20,13 +21,15 @@ class CurrencyService:
 
     async def get_currency_rates(self, user_id: int):
         symbols = await self.get_user_currency_symbols(user_id)
+        if not symbols:
+            raise UserCurrencyNotSet("Please, set your currencies using /add_currency")
         result = await api_gate.FacadeApiGateway().get_currencies(symbols)
         return result
 
     async def get_user_currency_symbols(self, user_id: int):
         symbols = await self.repository.get_symbols(user_id)
-        list_of_symbols = self.convert_to_string(symbols)
-        return list_of_symbols
+        string_of_symbols = self.convert_to_string(symbols)
+        return string_of_symbols
     
     @staticmethod
     def convert_to_string(symbols: list[CurrencySymbol]):

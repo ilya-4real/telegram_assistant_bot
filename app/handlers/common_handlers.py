@@ -41,9 +41,12 @@ async def get_todays_info(message: Message):
 @router.message(Command("weather"))
 async def weather_handler(message: Message) -> None:
     user_id = message.from_user.id
-    weather = await WeatherService().get_weather(user_id)
-    msg = messages.weather_message(weather)
-    await message.answer(msg)
+    try:
+        weather = await WeatherService().get_weather(user_id)
+        msg = messages.weather_message(weather)
+        await message.answer(msg)
+    except TypeError:
+        await message.answer("You haven't set your city. Set it using /set_city command")
 
 
 @router.message(Command("dropstate"))
@@ -54,4 +57,5 @@ async def drop_state(message: Message, state: FSMContext):
 
 @router.message()
 async def send_common_msg(message: Message):
+    print(message.photo)
     await message.answer(messages.common_message())

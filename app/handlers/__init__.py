@@ -5,6 +5,7 @@ from . import (
     task_handlers,
     common_handlers
 )
+from .callbacks import task_callbacks
 
 
 routers = [
@@ -12,5 +13,6 @@ routers = [
     currency_handlers.router,
     email_verify_handler.router,
     task_handlers.router,
+    task_callbacks.router,
     common_handlers.router
     ]

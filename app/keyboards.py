@@ -1,7 +1,6 @@
-
 from aiogram import types
 from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder
-from aiogram.filters.callback_data import CallbackData
+from .handlers.callbacks.task_callbacks import TaskCallbackFactory
 
 from database.models import Task
 
@@ -40,12 +39,12 @@ def tasks_kb(tasks: list[Task], start_page):
     if start_page >= 1:
         buttons.append(
             types.InlineKeyboardButton(
-                text='Previous', 
+                text='<-', 
                 callback_data=f'prev_{start_page - 1}')
                 )
     buttons.append(
         types.InlineKeyboardButton(
-            text='Next', 
+            text='->', 
             callback_data=f'next_{start_page + 1}'))
     builder.row(*buttons)
     return builder.as_markup()
@@ -65,11 +64,7 @@ def task_detail_kb(task: Task):
         types.InlineKeyboardButton(
             text='Date',
             callback_data=TaskCallbackFactory(action='date', task_id=task.id).pack()
-        ),  
-        types.InlineKeyboardButton(
-            text='time',
-            callback_data=TaskCallbackFactory(action='time', task_id=task.id).pack()
-        ), 
+        ) 
     )
     builder.row(
         types.InlineKeyboardButton(
@@ -77,7 +72,7 @@ def task_detail_kb(task: Task):
             callback_data=TaskCallbackFactory(action='delete', task_id=task.id).pack()
         ),
         types.InlineKeyboardButton(
-            text='task_nothing',
+            text='Nothing',
             callback_data=TaskCallbackFactory(action='nothing', task_id=task.id).pack()
         )
     )
@@ -96,7 +91,3 @@ def ask_to_delete_kb(task_id: int):
         )
     )
     return builder.as_markup()
-
-class TaskCallbackFactory(CallbackData, prefix='task'):
-    action: str
-    task_id: int

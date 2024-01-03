@@ -10,7 +10,10 @@ class TaskForm(StatesGroup):
 
 
 class TaskEditForm(StatesGroup):
-    editing_task = State()
+    editing_title = State()
+    editing_description = State()
+    editing_date = State()
+    editing_time = State()
 
 
 class EmailForm(StatesGroup):

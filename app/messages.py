@@ -7,11 +7,12 @@ from APIs import ApisData
 def common_message() -> str:
     """creates message for all unhandled messages"""
     msg = text(
-        'Hello!',
-        'I am your personal assistant.',
-        'Now I can show you weather /weather',
+        'Hi there!',
+        'I am your personal assistant',
+        'I can show you weather /weather',
         'currency rates /currency',
         'and manage your tasks /tasks',
+        "if you're stuck use /dropstate",
         sep='\n'
     )
     return msg

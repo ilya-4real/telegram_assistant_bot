@@ -34,9 +34,8 @@ class Task(Base):
 
 class Image(Base):
     __tablename__ = "images"
-    id: Mapped[int] = mapped_column(primary_key=True)
-    tg_id: Mapped[str] = mapped_column(nullable=False)
-    title: Mapped[str] = mapped_column(nullable=False)
+    tg_id: Mapped[str] = mapped_column(primary_key=True)
+    title: Mapped[str] = mapped_column(nullable=False, unique=True)
 
 
 class CurrencySymbol(Base):
