@@ -4,6 +4,19 @@ from database.models import Task, User
 from APIs import ApisData
 
 
+def welcome_message() -> str:
+    msg = text(
+        'Hello!',
+        'I am your personal assistant.',
+        'First of all, you need to setup your profile',
+        '1. Confirm your email(/verify_email) for all services',
+        '2. Set your city(/set_city) for weather service',
+        '3. Set preferred currency symbols(/add_currency) for rates service',
+        'By the way you can send me any message and I will show you a little help message',
+        sep='\n'
+    )
+    return msg
+
 def common_message() -> str:
     """creates message for all unhandled messages"""
     msg = text(

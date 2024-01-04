@@ -31,13 +31,9 @@ class SQLAlchemyRepository(AbstractRepository):
 
     async def add_one(self, **data):
         async with async_session_maker() as session:
-            stmt = insert(self.model).values(data).returning(self.model.id)
-            try:
-                res = await session.execute(stmt)
-                await session.commit()
-            except IntegrityError:
-                return "already exists"
-            return res.scalar_one()
+            stmt = insert(self.model).values(data)
+            await session.execute(stmt)
+            await session.commit()
 
     async def get_one(self, filter, filter_value):
         async with async_session_maker() as session:

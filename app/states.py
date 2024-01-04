@@ -24,6 +24,12 @@ class EmailForm(StatesGroup):
 class CityForm(StatesGroup):
     setting_city = State()
 
+
 class CurrencyForm(StatesGroup):
     setting_currency = State()
     make_sure = State()
+
+
+class ImageForm(StatesGroup):
+    choosing_category = State()
+    setting_image = State()

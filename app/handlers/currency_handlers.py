@@ -6,7 +6,7 @@ from aiogram.filters import Command
 
 from ..keyboards import build_keyboard
 from .. import messages
-from services import CurrencyService
+from services import CurrencyService, ImageService
 from exceptions import UserCurrencyNotSet
 
 
@@ -54,7 +54,8 @@ async def make_sure_currency(message: Message, state: FSMContext):
 async def get_currency_rates(message: Message):
     try:
         rates = await CurrencyService().get_currency_rates(message.from_user.id)
+        image_id = await ImageService.get_image_id('currency')
         msg = messages.get_cur_message(rates)
-        await message.answer(msg)
+        await message.answer_photo(image_id, msg)
     except UserCurrencyNotSet as e:
         await message.answer(str(e))

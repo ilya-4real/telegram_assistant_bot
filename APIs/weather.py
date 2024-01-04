@@ -15,11 +15,11 @@ class WeatherApiPoller(AbstractApiPoller):
             "appid": self.key,
             **query_params
         }
+        print(type(self.url), self.key)
         async with aiohttp.ClientSession() as session:
             async with session.get(self.url, params=params) as responce:
-                print(responce.status)
                 weather = await responce.json()
-                if weather.get('error'):
+                if responce.status != 200:
                     raise InvalidCity("There is no weather for your city")
                 return weather
 

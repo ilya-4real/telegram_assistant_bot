@@ -9,6 +9,7 @@ from config import EMAIL_SENDER, EMAIL_PASSWORD, SMTP_HOST, SMTP_PORT
 
 
 def check_email(email: str) -> str | None:
+    """checks email address according to regex pattern"""
     found_email = re.search(r"^.+@.+\..+$", email)
     if not found_email:
         raise InvalidEmail("Something wrong with your email. Try again")
@@ -16,6 +17,7 @@ def check_email(email: str) -> str | None:
 
 
 def generate_verification_code():
+    """generates verification code that contains 6 numbers"""
     code = ''
     for _ in range(6):
         code += str(random.randint(0, 9))
@@ -23,6 +25,7 @@ def generate_verification_code():
 
 
 def get_email_template(username: str, user_email: str, code: str):
+    """generates email with provided recepient and code"""
     print(type(user_email))
     print(str(user_email))
     message = EmailMessage()
@@ -41,6 +44,7 @@ def get_email_template(username: str, user_email: str, code: str):
 
 
 async def send_email(username: str, user_email: str):
+    """sends email using aiosmtplib"""
     email = check_email(user_email)
     code = generate_verification_code()
     message = get_email_template(username, email, code)

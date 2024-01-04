@@ -9,6 +9,7 @@ scheduler = AsyncIOScheduler()
 
 
 class TaskScheduleService:
+    """Service that manages work with Apscheduler"""
     def __init__(self, scheduler: AsyncIOScheduler) -> None:
         self.scheduler = scheduler
 
@@ -35,7 +36,7 @@ class TaskScheduleService:
         self.scheduler.reschedule_job(job_id, trigger='date', run_date=date_time)
 
     def remove_job(self, job_id: str):
-        """removes jov from scheduler"""
+        """removes job from scheduler"""
         scheduler.remove_job(job_id)
 
 
