@@ -1,4 +1,3 @@
-from datetime import datetime
 from aiogram import Router, F
 from aiogram.filters import Command
 from aiogram.types import Message, ReplyKeyboardRemove
@@ -6,14 +5,17 @@ from aiogram.fsm.context import FSMContext
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from .. import states
-from services import check_date, check_time, TaskService, UsersService, ApschedulerService
+from services import (
+    check_date,
+    check_time,
+    TaskService,
+    UsersService,
+)
 from .. import messages
 from ..keyboards import build_keyboard, tasks_kb
 from config import TASKS_PAGE_SIZE
 
 router = Router()
-scheduler = AsyncIOScheduler()
-
 
 @router.message(Command("add_task"))
 async def start_task_form(message: Message, state: FSMContext):
@@ -33,13 +35,12 @@ async def set_task_title(message: Message, state: FSMContext):
 
 
 @router.message(states.TaskForm.setting_body)
-async def set_task_body(message:Message, state: FSMContext):
+async def set_task_body(message: Message, state: FSMContext):
     await state.update_data(body=message.text)
     await state.set_state(states.TaskForm.setting_exp_date)
     await message.answer(
-        "Great, almost done! Enter the task expiration date"
-        " in format like dd-mm-yy"
-        )
+        "Great, almost done! Enter the task expiration date in format like dd-mm-yy"
+    )
 
 
 @router.message(states.TaskForm.setting_exp_date)
@@ -51,10 +52,10 @@ async def set_task_date(message: Message, state: FSMContext):
         await message.answer(
             "Date successfully set."
             " Send me exact time of expiration in format like hh-mm"
-            )
+        )
     except ValueError as e:
         await message.answer(str(e))
-    
+
 
 @router.message(states.TaskForm.setting_exp_time)
 async def set_task_time(message: Message, state: FSMContext):
@@ -63,43 +64,24 @@ async def set_task_time(message: Message, state: FSMContext):
         await state.update_data(exp_time=time)
         await state.set_state(states.TaskForm.make_sure)
         data = await state.get_data()
-        keyboard = build_keyboard('Yes', 'No')
-        await message.answer(
-            messages.check_task_message(**data),
-            reply_markup=keyboard
-            )
+        keyboard = build_keyboard("Yes", "No")
+        await message.answer(messages.check_task_message(**data), reply_markup=keyboard)
     except ValueError as e:
-         await message.answer(str(e))
+        await message.answer(str(e))
 
 
 @router.message(states.TaskForm.make_sure)
 async def add_task(message: Message, state: FSMContext):
-    if message.text == 'Yes':
+    if message.text == "Yes":
         data = await state.get_data()
-        date = data['exp_date']
-        time = data['exp_time']
-        job_id = await ApschedulerService(scheduler).set_job(
-            TaskService().combine_date_time(date, time), 
-            message.bot, 
-            message.chat.id, 
-            data['title']
-            )
-        await TaskService().add_task(
-            message.from_user.id,
-            job_id=job_id, 
-            **data
-            )
-        
+        await TaskService().add_task(message.from_user.id, message, **data)
         await message.answer(
-            "Good. The task has been added",
-            reply_markup=ReplyKeyboardRemove()
-            )
-
+            "Good. The task has been added", reply_markup=ReplyKeyboardRemove()
+        )
     else:
         await message.answer(
-            "Okey. Try to add task again",
-            reply_markup=ReplyKeyboardRemove()
-            )
+            "Okey. Try to add task again", reply_markup=ReplyKeyboardRemove()
+        )
     await state.clear()
 
 
@@ -107,10 +89,8 @@ async def add_task(message: Message, state: FSMContext):
 async def view_all_tasks(message: Message):
     start_page = 0
     tasks = await TaskService().get_all_tasks(
-        TASKS_PAGE_SIZE, 
-        start_page, 
-        message.from_user.id
-        )
+        TASKS_PAGE_SIZE, start_page, message.from_user.id
+    )
     msg = messages.all_tasks_message(tasks)
     keyboard = tasks_kb(tasks, start_page)
     await message.answer(msg, reply_markup=keyboard)
@@ -120,40 +100,39 @@ async def view_all_tasks(message: Message):
 async def update_task_title(message: Message, state: FSMContext):
     new_title = message.text
     state_data = await state.get_data()
-    await TaskService().update_task(state_data['task_id'], title=new_title)
-    await message.answer("Good, your task has been updated")
+    await TaskService().update_task_title(state_data["task_id"], title=new_title)
+    await message.answer(f"Good, your task has been updated to {new_title}")
 
 
 @router.message(states.TaskEditForm.editing_description)
-async def update_task_title(message: Message, state: FSMContext):
+async def update_task_description(message: Message, state: FSMContext):
     new_desc = message.text
     state_data = await state.get_data()
-    await TaskService().update_task(state_data['task_id'], body=new_desc)
+    await TaskService().update_task_desc(state_data["task_id"], description=new_desc)
     await message.answer("Good, your task has been updated")
 
 
 @router.message(states.TaskEditForm.editing_date)
-async def update_task_title(message: Message, state: FSMContext):
+async def update_task_date(message: Message, state: FSMContext):
     new_date = message.text
-    state_data = await state.get_data()
     try:
         date = check_date(new_date)
-        await state.update_data(date=date)
+        await state.update_data(new_date=date)
         await state.set_state(states.TaskEditForm.editing_time)
         await message.answer("Great, send me new expiration time in format like HH-MM")
     except ValueError as e:
         await message.answer(str(e))
-    
+
 
 @router.message(states.TaskEditForm.editing_time)
-async def update_task_title(message: Message, state: FSMContext):
+async def update_task_time(message: Message, state: FSMContext):
     new_time = message.text
-    state_data = await state.get_data()
+    data = await state.get_data()
     try:
         time = check_time(new_time)
-        new_date = state_data['date']
-        exp_datetime = TaskService.combine_date_time(new_date, time)
-        await TaskService().update_task(state_data['task_id'], expires_at=exp_datetime)
+        await TaskService().reschedule_task(new_time=time, **data)
         await message.answer("Good, your task has been updated")
     except ValueError as e:
         await message.answer(str(e))
+    else:
+        await state.clear()

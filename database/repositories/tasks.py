@@ -1,3 +1,6 @@
+from typing import Literal
+from datetime import datetime
+
 from .repository import SQLAlchemyRepository, SQLAlchemyOneToManyRepository
 from ..models import Task, User
 
@@ -13,3 +16,28 @@ class TasksRepository(SQLAlchemyOneToManyRepository):
             self.foreign_model.id, 
             user_id
             )
+    
+    async def update_task_field(
+            self, 
+            field_name: Literal['description', 'title'],
+            task_id: int,
+            value: str
+            ) -> str:
+        match field_name:
+            case 'description':
+                result = await self.update_field(self.model.id, task_id, 
+                                                 self.model.body, body=value)
+            case 'title':
+                result = await self.update_field(self.model.id, task_id, 
+                                                self.model.title, title=value)      
+        return result
+    
+    async def update_task_expdate(self, task_id: int, exp_datetime: datetime) -> str:
+        job_id = await self.update_field(
+            self.model.id, task_id, 
+            self.model.job_id, expires_at=exp_datetime
+            )
+        return job_id
+    
+    async def delete_task(self, task_id: int) -> str:
+        return await self.delete_one(self.model.id, task_id, self.model.job_id)

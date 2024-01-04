@@ -2,8 +2,8 @@ from datetime import date, time, datetime, timedelta
 import re
 
 
-def weeks_n_days_to_datetime(days: int) -> date:
-    """converts format like '2 weeks' or '3 days' to python date"""
+def days_to_datetime(days: int) -> date:
+    """converts day to datetime format to python date"""
     result_date = datetime.today() + timedelta(days)
     return result_date.date()
 
@@ -18,15 +18,17 @@ def format_to_datetime(datetimeformat: str) -> date:
 
 def check_date(date: str) -> date:
     """checks if the time entered correctly"""
-    found = re.search(r'(\d\d.\d\d.\d\d)|(\d weeks?)|(\d days?)', date)
+    found = re.search(r'(^\d\d.\d\d.\d\d$)|(\d weeks?)|(\d days?)|(Today|today)', date)
     if not found:
         raise ValueError("Invalid date format")
     if found.groups()[0]:
         return format_to_datetime(found.groups()[0])
     elif found.groups()[1]:
-        return weeks_n_days_to_datetime(int(found.group()[0])*7)
+        return days_to_datetime(int(found.group()[0])*7)
     elif found.groups()[2]:
-        return weeks_n_days_to_datetime(int(found.group()[0]))
+        return days_to_datetime(int(found.group()[0]))
+    elif found.group()[3]:
+        return datetime.now().date()
 
 
 def check_time(exp_time: str) -> time:

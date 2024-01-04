@@ -5,7 +5,7 @@ import logging
 import sys
 from config import API_KEY
 import asyncio
-from app.handlers.task_handlers import scheduler 
+from services.task_service import scheduler
 
 from app.handlers import routers
 

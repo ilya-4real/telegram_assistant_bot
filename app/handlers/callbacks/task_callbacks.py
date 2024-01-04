@@ -26,7 +26,7 @@ async def send_random(callback: CallbackQuery):
 
 async def update_tasks(message: Message, page: int, user_id: int):
     start = page * TASKS_PAGE_SIZE
-    tasks = await TaskService().get_all_tasks(int(TASKS_PAGE_SIZE), start, user_id)
+    tasks = await TaskService().get_all_tasks(TASKS_PAGE_SIZE, start, user_id)
     msg = messages.all_tasks_message(tasks)
     keyboard = keyboards.tasks_kb(tasks, page)
     if tasks:

@@ -32,6 +32,7 @@ def inline_kb_builder(page: int) -> types.InlineKeyboardMarkup:
 
 
 def tasks_kb(tasks: list[Task], start_page):
+    print(start_page)
     builder = InlineKeyboardBuilder()
     buttons = []
     for task in tasks:

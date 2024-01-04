@@ -45,11 +45,16 @@ class SQLAlchemyRepository(AbstractRepository):
             res = await session.execute(query)
             return res.scalar_one_or_none()
 
-    async def delete_one(self, filter, filter_value):
+    async def delete_one(self, filter, filter_value, returning_field):
         async with async_session_maker() as session:
-            stmt = delete(self.model).where(filter == filter_value)
+            stmt = (
+                delete(self.model)
+                .where(filter == filter_value)
+                .returning(returning_field)
+            )
             res = await session.execute(stmt)
             await session.commit()
+            return res.scalar()
 
     async def get_all(self, limit: int, offset: int):
         async with async_session_maker() as session: 
@@ -57,11 +62,18 @@ class SQLAlchemyRepository(AbstractRepository):
             res = await session.execute(query)
             return res.scalars().all()
 
-    async def update_field(self, filter: Any, filter_value: Any, **values: Any):
+    async def update_field(self, filter: Any, filter_value: Any,
+                            return_field: Any, **values: Any):
         async with async_session_maker() as session:
-            stmt = update(self.model).where(filter == filter_value).values(**values)
-            await session.execute(stmt)
+            stmt = (
+                update(self.model)
+                .where(filter == filter_value)
+                .values(**values)
+                .returning(return_field)
+            )
+            result = await session.execute(stmt)
             await session.commit()
+            return result.scalar()
 
 
 class SQLAlchemyOneToManyRepository(SQLAlchemyRepository):
