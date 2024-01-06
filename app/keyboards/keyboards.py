@@ -1,8 +1,8 @@
 from aiogram import types
 from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder
-from .handlers.callbacks.task_callbacks import TaskCallbackFactory
+from app.handlers.callbacks.task_callbacks import TaskCallbackFactory
 
-from database.models import Task
+from app.database.models import Task
 
 
 def build_keyboard(*button: str, adjust_level: int = 2) -> types.ReplyKeyboardMarkup:

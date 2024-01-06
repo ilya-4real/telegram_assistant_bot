@@ -1,10 +1,10 @@
 import re
 
-from APIs import api_gate, ApisData
-from database.repositories.users import UsersRepository
-from database.repositories.currencies import CurrencyRepository
-from database.models import CurrencySymbol
-from exceptions import UserCurrencyNotSet
+from app.APIs import ApisData, FacadeApiGateway
+from app.database.repositories.users import UsersRepository
+from app.database.repositories.currencies import CurrencyRepository
+from app.database.models import CurrencySymbol
+from app.exceptions import InvalidCurrencies
 
 
 class CurrencyService:
@@ -13,23 +13,31 @@ class CurrencyService:
         self.repository = CurrencyRepository()
 
     def check_currency_symbol(self, symbol: str) -> str | None:
+        """checks is provided symbol correct or net with regex"""
         result = re.search(r'^[a-zA-Z]{3}$', symbol)
         return symbol.upper() if result else None
 
     async def add_currency_to_user(self, symbol: str, user_id):
+        """adds currensy symbol to users table in database"""
         await self.repository.add_one(symbol=symbol, user_id=user_id)
 
-    async def get_currency_rates(self, user_id: int):
+    async def get_currency_rates(self, user_id: int) -> dict[str, float]:
+        """returns currency symbols rates from API"""
         symbols = await self.get_user_currency_symbols(user_id)
         if not symbols:
-            raise UserCurrencyNotSet("Please, set your currencies using /add_currency")
-        result = await api_gate.FacadeApiGateway().get_currencies(symbols)
+            raise InvalidCurrencies("Please, set your currencies using /add_currency or remove incorrect /delete_currency")
+        result = await FacadeApiGateway.get_currencies(symbols)
         return result
 
     async def get_user_currency_symbols(self, user_id: int):
+        """returns user's currency symbols from database"""
         symbols = await self.repository.get_symbols(user_id)
         string_of_symbols = self.convert_to_string(symbols)
         return string_of_symbols
+    
+    async def delete_currency_by_symbol(self, symbol: str, user_id: int):
+        """deletes one currency symbol from database"""
+        await self.repository.delete_by_symbol(symbol, user_id)
     
     @staticmethod
     def convert_to_string(symbols: list[CurrencySymbol]):
@@ -43,25 +51,11 @@ class CurrencyService:
 class WeatherService:
     """Service that accesses weather API and database"""
     def __init__(self) -> None:
-        self.api_gateway = api_gate.FacadeApiGateway()
+        self.api_gateway = FacadeApiGateway
         self.repository = UsersRepository()
 
     async def get_weather(self, user_id: int):
+        """returns current weather from API"""
         user = await self.repository.get_user(user_id)
         weather = await self.api_gateway.get_weather(user.city)
         return weather
-    
-
-class InfoService:
-    """Service that Manages both weather and currency API"""
-    def __init__(self) -> None:
-        self.user_repository = UsersRepository()
-        self.currency_repository = CurrencyRepository()
-        self.api_gateway = api_gate.FacadeApiGateway()
-    
-    async def get_info(self, user_id: int) -> ApisData:
-        user = await self.user_repository.get_user(user_id)
-        cur_syms = await self.currency_repository.get_symbols(user_id)
-        converted_cur_syms = ','.join([symbol.symbol for symbol in cur_syms])
-        info = await self.api_gateway.get_apis_data(user.city, converted_cur_syms)
-        return info

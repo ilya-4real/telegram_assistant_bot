@@ -3,12 +3,16 @@ from aiogram.filters import Command, CommandStart
 from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
 
-from .. import messages
-from exceptions import InvalidCity
-from services import (
+from app.exceptions import InvalidCity
+from app.messages import (
+    welcome_message, 
+    getme_message, 
+    weather_message, 
+    common_message
+    )
+from app.services import (
     CurrencyService, 
-    WeatherService, 
-    InfoService, 
+    WeatherService,  
     UsersService, 
     ImageService
 )
@@ -25,7 +29,7 @@ async def start_handler(message: Message) -> None:
         username=message.from_user.username
         )
         await message.answer(
-            messages.welcome_message()
+            welcome_message()
             )
     except:
         await message.answer("How can I help you?")
@@ -37,17 +41,8 @@ async def get_my_info(message: Message):
     currency = CurrencyService()
     user = await user.get_user(message.from_user.id)
     symbols = await currency.get_user_currency_symbols(message.from_user.id)
-    answer = messages.getme_message(user, symbols)
+    answer = getme_message(user, symbols)
     await message.answer(answer)
-
-
-@router.message(Command('show_info'))
-async def get_todays_info(message: Message):
-    user_id = message.from_user.id
-    image_id = await ImageService.get_image_id('info')
-    data = await InfoService().get_info(user_id)
-    msg = messages.todays_info_message(data)
-    await message.answer_photo(image_id, msg)
 
 
 @router.message(Command("weather"))
@@ -56,7 +51,7 @@ async def weather_handler(message: Message) -> None:
     image_id = await ImageService.get_image_id('weather')
     try:
         weather = await WeatherService().get_weather(user_id)
-        msg = messages.weather_message(weather)
+        msg = weather_message(weather)
         await message.answer_photo(image_id, msg)
     except InvalidCity:
         await message.answer("You haven't set your city or your city is incorrect. Set it using /set_city command")
@@ -70,4 +65,4 @@ async def drop_state(message: Message, state: FSMContext):
 
 @router.message()
 async def send_common_msg(message: Message):
-    await message.answer(messages.common_message())
+    await message.answer(common_message())

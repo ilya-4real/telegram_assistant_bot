@@ -3,9 +3,9 @@ from aiogram.filters import Command
 from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
 
-from services import UsersService, send_email
-from exceptions.service_exceptions import InvalidEmail
-from ..states import EmailForm
+from app.services import UsersService, send_email
+from app.exceptions.service_exceptions import InvalidEmail
+from app.states.states import EmailForm
 
 router = Router()
 

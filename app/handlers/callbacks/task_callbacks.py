@@ -3,9 +3,11 @@ from aiogram.filters.callback_data import CallbackData
 from aiogram.types import CallbackQuery, Message
 from aiogram.fsm.context import FSMContext
 
-from app import states, messages, keyboards
-from services import TaskService
-from config import TASKS_PAGE_SIZE
+from app.states import states
+from app.keyboards import keyboards
+from app.messages import messages
+from app.services import TaskService
+from app.config import TASKS_PAGE_SIZE
 
 
 router = Router()

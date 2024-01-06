@@ -1,7 +1,8 @@
 from aiogram.utils.markdown import text
 from datetime import date, time
-from database.models import Task, User
-from APIs import ApisData
+
+from app.database.models import Task, User
+from app.APIs import ApisData
 
 
 def welcome_message() -> str:
@@ -72,14 +73,26 @@ def all_tasks_message(tasks: list[Task]) -> str:
     return result
 
 
+def task_detail(task: Task):
+    msg = text(
+        f'title: {task.title}',
+        f'description: {task.body}',
+        f'expires: {task.expires_at}\n',
+        'What would you like to change?', 
+        sep='\n'
+    )
+    return msg
+
+
 def weather_message(weather: dict) -> str:
     """creates message for weather"""
     msg = text(
-        '<b>Current weather</b>',
-        f'temperature: {weather['main']['temp']}',
-        f'feels like: {weather['main']['feels_like']}',
-        f'pressure: {weather['main']['pressure']}',
-        f'wind speed: {weather['wind']['speed']}',
+        '<b>Current weather</b>\n',
+        f'Description: {weather['weather'][0]['description']}',
+        f'Temperature: {weather['main']['temp']}',
+        f'Feels like: {weather['main']['feels_like']}',
+        f'Pressure: {weather['main']['pressure']}',
+        f'Wind speed: {weather['wind']['speed']}',
         sep='\n'
     )
     return msg
@@ -96,6 +109,14 @@ def get_cur_message(rates: dict[str, float]) -> str:
         sep='\n'
         )
 
+def task_dateformat_message() -> str:
+    """returns date format help message"""
+    msg = text(
+        'Send me exact date of expiration in format DD-MM-YY or using human language today | 1 week | 2 days.'
+        ' I will notify you when the deadline approaches'
+    )
+    return msg
+
 
 def todays_info_message(data: ApisData) -> str:
     """creates message combined of weather and currency rates"""
@@ -104,16 +125,6 @@ def todays_info_message(data: ApisData) -> str:
     msg = text(
         weather_msg,
         cur_msg,
-        sep='\n'
-    )
-    return msg
-
-def task_detail(task: Task):
-    msg = text(
-        f'title: {task.title}',
-        f'description: {task.body}',
-        f'expires: {task.expires_at}\n',
-        'What would you like to change?', 
         sep='\n'
     )
     return msg

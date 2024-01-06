@@ -1,13 +1,13 @@
-from ..states import CurrencyForm
 from aiogram import Router
 from aiogram.types import Message, ReplyKeyboardRemove
 from aiogram.fsm.context import FSMContext
 from aiogram.filters import Command
 
-from ..keyboards import build_keyboard
-from .. import messages
-from services import CurrencyService, ImageService
-from exceptions import UserCurrencyNotSet
+from app.states import CurrencyForm, CurrencyDelete
+from app.keyboards import build_keyboard
+from app.messages import get_cur_message
+from app.services import CurrencyService, ImageService
+from app.exceptions import InvalidCurrencies
 
 
 router = Router()
@@ -49,13 +49,29 @@ async def make_sure_currency(message: Message, state: FSMContext):
             reply_markup=ReplyKeyboardRemove()
             )
 
+@router.message(Command('delete_currency'))
+async def ask_delete_currency(message: Message, state: FSMContext):
+    await state.set_state(CurrencyDelete.deleting_currency)
+    await message.answer("Alright, send me currency symbol that you want to delete")
+
+
+@router.message(CurrencyDelete.deleting_currency)
+async def delete_currency(message: Message, state: FSMContext):
+    symbol = message.text.upper()
+    if len(symbol) == 3:
+        await CurrencyService().delete_currency_by_symbol(symbol, message.from_user.id)
+        await state.clear()
+        await message.answer('Well, currency has been deleted')
+    else:
+        await message.answer('Invalid currency symbol format. lenght should 3')
+
 
 @router.message(Command("currency"))
 async def get_currency_rates(message: Message):
     try:
         rates = await CurrencyService().get_currency_rates(message.from_user.id)
         image_id = await ImageService.get_image_id('currency')
-        msg = messages.get_cur_message(rates)
+        msg = get_cur_message(rates)
         await message.answer_photo(image_id, msg)
-    except UserCurrencyNotSet as e:
-        await message.answer(str(e))
+    except InvalidCurrencies:
+        await message.answer("set your currency symbols /add_currency or remove invalid /delete_currency")

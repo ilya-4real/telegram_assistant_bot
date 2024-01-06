@@ -1,4 +1,4 @@
-from database.repositories.images import ImageRepository
+from app.database.repositories.images import ImageRepository
 from typing import Literal
 
 class ImageService:

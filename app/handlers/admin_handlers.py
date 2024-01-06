@@ -4,7 +4,7 @@ from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 
 from app.states import ImageForm
-from services import UsersService, ImageService
+from app.services import UsersService, ImageService
 
 
 router = Router()

@@ -17,4 +17,6 @@ EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD")
 WEATHER_API_URL = "https://api.openweathermap.org/data/2.5/weather"
 CURRENCIES_API_URL = "http://api.exchangeratesapi.io/v1/latest"
 
+LOCAL_IP = os.environ.get("LOCAL_IP")
+
 TASKS_PAGE_SIZE = int(os.environ.get("TASKS_PAGE_SIZE"))

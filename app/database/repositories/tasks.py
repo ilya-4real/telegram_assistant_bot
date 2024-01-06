@@ -1,14 +1,15 @@
 from typing import Literal
 from datetime import datetime
 
-from .repository import SQLAlchemyRepository, SQLAlchemyOneToManyRepository
+from .repository import SQLAlchemyOneToManyRepository
 from ..models import Task, User
 
 class TasksRepository(SQLAlchemyOneToManyRepository):
     model = Task
     foreign_model = User
 
-    async def get_all_tasks(self, limit: int, offset: int, user_id: int):
+    async def get_all_tasks(self, limit: int, offset: int, user_id: int) ->list[Task]:
+        """returns all tasks with provided limit and offset"""
         return await self.select_related(
             limit, 
             offset, 
@@ -23,6 +24,7 @@ class TasksRepository(SQLAlchemyOneToManyRepository):
             task_id: int,
             value: str
             ) -> str:
+        """updates one column in one task row"""
         match field_name:
             case 'description':
                 result = await self.update_field(self.model.id, task_id, 
@@ -33,6 +35,7 @@ class TasksRepository(SQLAlchemyOneToManyRepository):
         return result
     
     async def update_task_expdate(self, task_id: int, exp_datetime: datetime) -> str:
+        """updates expiration date in task model"""
         job_id = await self.update_field(
             self.model.id, task_id, 
             self.model.job_id, expires_at=exp_datetime

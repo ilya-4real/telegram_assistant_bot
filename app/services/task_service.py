@@ -2,7 +2,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from aiogram import Bot
 from aiogram.types import Message
 
-from database.repositories.tasks import TasksRepository
+from app.database.repositories.tasks import TasksRepository
 from datetime import datetime, date, time
 
 scheduler = AsyncIOScheduler()

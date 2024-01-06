@@ -3,8 +3,8 @@ from aiogram.filters import Command
 from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
 
-from services import UsersService
-from ..states import CityForm
+from app.services import UsersService
+from app.states import CityForm
 
 
 router = Router()

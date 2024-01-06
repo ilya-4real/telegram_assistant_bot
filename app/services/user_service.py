@@ -1,7 +1,7 @@
 import re
 
-from database.repositories.users import UsersRepository
-from config import ADMIN_ID
+from app.database.repositories.users import UsersRepository
+from app.config import ADMIN_ID
 
 
 class UsersService:

@@ -30,6 +30,10 @@ class CurrencyForm(StatesGroup):
     make_sure = State()
 
 
+class CurrencyDelete(StatesGroup):
+    deleting_currency = State()
+
+
 class ImageForm(StatesGroup):
     choosing_category = State()
     setting_image = State()
