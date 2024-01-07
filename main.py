@@ -5,7 +5,7 @@ import sys
 from aiogram.types import Update
 
 from config import API_KEY, LOCAL_IP
-from bot import bot, dp, routers
+from bot import bot, dp, routers, scheduler
 
 
 WEBHOOK_PATH =f'/bot/{API_KEY}' 
@@ -16,6 +16,7 @@ dp.include_routers(*routers)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    scheduler.start()
     #on startup
     async with bot.session:
         webhook_info = await bot.get_webhook_info()
