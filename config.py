@@ -9,6 +9,13 @@ ADMIN_ID = os.environ.get("ADMIN_ID")
 WEATHER_KEY = os.environ.get("WEATHER_API_KEY")
 CURRENCIES_KEY = os.environ.get("CURRENCY_API_KEY")
 
+
+POSTGRES_HOST = os.environ.get("POSTGES_HOST")
+POSTGRES_PORT = os.environ.get("POSTGRES_PORT")
+POSTGRES_DATABASE = os.environ.get("POSTGRES_DATABASE")
+POSTGRES_USER = os.environ.get("POSTGRES_USER")
+POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD")
+
 SMTP_HOST = os.environ.get("SMTP_HOST")
 SMTP_PORT = int(os.environ.get("SMTP_PORT"))
 EMAIL_SENDER = os.environ.get("EMAIL_SENDER")

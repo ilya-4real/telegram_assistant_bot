@@ -1,4 +1,4 @@
-from app.config import WEATHER_KEY, CURRENCIES_KEY
+from config import WEATHER_KEY, CURRENCIES_KEY
 from .currency import CurrencyApiPoller
 from .weather import WeatherApiPoller
 

@@ -3,7 +3,7 @@ import aiohttp
 from json import loads
 
 from app.exceptions import InvalidCity
-from app.config import WEATHER_API_URL, WEATHER_KEY
+from config import WEATHER_API_URL, WEATHER_KEY
 from .abstract_poller import AbstractApiPoller
 
 

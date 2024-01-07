@@ -5,7 +5,7 @@ import re
 from email.message import EmailMessage
 
 from app.exceptions import InvalidEmail
-from app.config import EMAIL_SENDER, EMAIL_PASSWORD, SMTP_HOST, SMTP_PORT
+from config import EMAIL_SENDER, EMAIL_PASSWORD, SMTP_HOST, SMTP_PORT
 
 
 def check_email(email: str) -> str | None:

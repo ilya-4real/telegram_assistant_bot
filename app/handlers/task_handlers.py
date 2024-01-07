@@ -12,7 +12,7 @@ from app.services import (
 )
 from app.messages import check_task_message, all_tasks_message, task_dateformat_message
 from app.keyboards import build_keyboard, tasks_kb
-from app.config import TASKS_PAGE_SIZE
+from config import TASKS_PAGE_SIZE
 
 router = Router()
 

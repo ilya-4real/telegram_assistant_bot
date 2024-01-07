@@ -7,7 +7,7 @@ from app.states import states
 from app.keyboards import keyboards
 from app.messages import messages
 from app.services import TaskService
-from app.config import TASKS_PAGE_SIZE
+from config import TASKS_PAGE_SIZE
 
 
 router = Router()

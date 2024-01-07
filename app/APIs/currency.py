@@ -1,5 +1,5 @@
 import aiohttp
-from app.config import CURRENCIES_API_URL, CURRENCIES_KEY
+from config import CURRENCIES_API_URL, CURRENCIES_KEY
 from .abstract_poller import AbstractApiPoller
 from app.exceptions import InvalidCurrencies
 
