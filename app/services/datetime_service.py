@@ -18,13 +18,13 @@ def format_to_datetime(datetimeformat: str) -> date:
 
 def check_date(date: str) -> date:
     """checks if the time entered correctly"""
-    found = re.search(r'(^\d\d.\d\d.\d\d$)|(\d weeks?)|(\d days?)|(Today|today)', date)
+    found = re.search(r"(^\d\d.\d\d.\d\d$)|(\d weeks?)|(\d days?)|(Today|today)", date)
     if not found:
         raise ValueError("Invalid date format")
     if found.groups()[0]:
         return format_to_datetime(found.groups()[0])
     elif found.groups()[1]:
-        return days_to_datetime(int(found.group()[0])*7)
+        return days_to_datetime(int(found.group()[0]) * 7)
     elif found.groups()[2]:
         return days_to_datetime(int(found.group()[0]))
     elif found.group()[3]:
@@ -33,7 +33,7 @@ def check_date(date: str) -> date:
 
 def check_time(exp_time: str) -> time:
     """checks if the time entered correctly"""
-    found = re.search(r'\d\d.\d\d', exp_time)
+    found = re.search(r"\d\d.\d\d", exp_time)
     if found:
         hours = int(found.group()[0:2])
         minutes = int(found.group()[3:5])

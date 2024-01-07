@@ -20,14 +20,12 @@ def inline_kb_builder(page: int) -> types.InlineKeyboardMarkup:
     if page >= 1:
         builder.add(
             types.InlineKeyboardButton(
-                text='Previous', 
-                callback_data=f'prev_{page - 1}')
-                )
-    builder.add(
-        types.InlineKeyboardButton(
-            text='Next', 
-            callback_data=f'next_{page + 1}')
+                text="Previous", callback_data=f"prev_{page - 1}"
             )
+        )
+    builder.add(
+        types.InlineKeyboardButton(text="Next", callback_data=f"next_{page + 1}")
+    )
     return builder.as_markup()
 
 
@@ -36,17 +34,20 @@ def tasks_kb(tasks: list[Task], start_page):
     builder = InlineKeyboardBuilder()
     buttons = []
     for task in tasks:
-        builder.row(types.InlineKeyboardButton(text=task.title, callback_data=f'taskdetail_{task.id}'))
+        builder.row(
+            types.InlineKeyboardButton(
+                text=task.title, callback_data=f"taskdetail_{task.id}"
+            )
+        )
     if start_page >= 1:
         buttons.append(
             types.InlineKeyboardButton(
-                text='<-', 
-                callback_data=f'prev_{start_page - 1}')
-                )
+                text="<-", callback_data=f"prev_{start_page - 1}"
+            )
+        )
     buttons.append(
-        types.InlineKeyboardButton(
-            text='->', 
-            callback_data=f'next_{start_page + 1}'))
+        types.InlineKeyboardButton(text="->", callback_data=f"next_{start_page + 1}")
+    )
     builder.row(*buttons)
     return builder.as_markup()
 
@@ -55,40 +56,47 @@ def task_detail_kb(task: Task):
     builder = InlineKeyboardBuilder()
     builder.row(
         types.InlineKeyboardButton(
-            text='Title',
-            callback_data=TaskCallbackFactory(action='title', task_id=task.id).pack()
+            text="Title",
+            callback_data=TaskCallbackFactory(action="title", task_id=task.id).pack(),
         ),
         types.InlineKeyboardButton(
-            text='Description',
-            callback_data=TaskCallbackFactory(action='description', task_id=task.id).pack()
+            text="Description",
+            callback_data=TaskCallbackFactory(
+                action="description", task_id=task.id
+            ).pack(),
         ),
         types.InlineKeyboardButton(
-            text='Date',
-            callback_data=TaskCallbackFactory(action='date', task_id=task.id).pack()
-        ) 
+            text="Date",
+            callback_data=TaskCallbackFactory(action="date", task_id=task.id).pack(),
+        ),
     )
     builder.row(
         types.InlineKeyboardButton(
-            text='Delete',
-            callback_data=TaskCallbackFactory(action='delete', task_id=task.id).pack()
+            text="Delete",
+            callback_data=TaskCallbackFactory(action="delete", task_id=task.id).pack(),
         ),
         types.InlineKeyboardButton(
-            text='Nothing',
-            callback_data=TaskCallbackFactory(action='nothing', task_id=task.id).pack()
-        )
+            text="Nothing",
+            callback_data=TaskCallbackFactory(action="nothing", task_id=task.id).pack(),
+        ),
     )
     return builder.as_markup()
+
 
 def ask_to_delete_kb(task_id: int):
     builder = InlineKeyboardBuilder()
     builder.row(
         types.InlineKeyboardButton(
-            text='Yes',
-            callback_data=TaskCallbackFactory(action='reallydelete', task_id=task_id).pack()
+            text="Yes",
+            callback_data=TaskCallbackFactory(
+                action="reallydelete", task_id=task_id
+            ).pack(),
         ),
         types.InlineKeyboardButton(
-            text='No',
-            callback_data=TaskCallbackFactory(action='notdelete', task_id=task_id).pack()
-        )
+            text="No",
+            callback_data=TaskCallbackFactory(
+                action="notdelete", task_id=task_id
+            ).pack(),
+        ),
     )
     return builder.as_markup()

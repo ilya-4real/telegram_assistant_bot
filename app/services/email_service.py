@@ -18,7 +18,7 @@ def check_email(email: str) -> str | None:
 
 def generate_verification_code():
     """generates verification code that contains 6 numbers"""
-    code = ''
+    code = ""
     for _ in range(6):
         code += str(random.randint(0, 9))
     return code
@@ -29,16 +29,16 @@ def get_email_template(username: str, user_email: str, code: str):
     print(type(user_email))
     print(str(user_email))
     message = EmailMessage()
-    message['Subject'] = "Telegram assistant verification"
-    message['From'] = EMAIL_SENDER
-    message['To'] = str(user_email)
+    message["Subject"] = "Telegram assistant verification"
+    message["From"] = EMAIL_SENDER
+    message["To"] = str(user_email)
     message.set_content(
-        '<div>'
-        f"<h1> Hello {username}!</h1>" 
+        "<div>"
+        f"<h1> Hello {username}!</h1>"
         "<h1> Your verification code: </h1>"
         f"<h2> {code} <h2>"
-        '</div>',
-        subtype='html'
+        "</div>",
+        subtype="html",
     )
     return message
 
@@ -54,6 +54,6 @@ async def send_email(username: str, user_email: str):
         username=EMAIL_SENDER,
         password=EMAIL_PASSWORD,
         port=SMTP_PORT,
-        use_tls=True
-        )
+        use_tls=True,
+    )
     return code

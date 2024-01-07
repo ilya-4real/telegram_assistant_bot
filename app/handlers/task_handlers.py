@@ -16,6 +16,7 @@ from config import TASKS_PAGE_SIZE
 
 router = Router()
 
+
 @router.message(Command("add_task"))
 async def start_task_form(message: Message, state: FSMContext):
     user_verified = await UsersService.check_email(message.from_user.id)
@@ -95,6 +96,7 @@ async def view_all_tasks(message: Message):
         await message.answer(msg, reply_markup=keyboard)
     else:
         await message.answer("You have no tasks yet. Add some using /add_task command")
+
 
 @router.message(TaskEditForm.editing_title)
 async def update_task_title(message: Message, state: FSMContext):

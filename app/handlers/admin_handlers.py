@@ -36,7 +36,7 @@ async def set_image(message: Message, state: FSMContext):
         await message.answer("There is no image. send it without jokes")
     else:
         state_data = await state.get_data()
-        title = state_data['title']
+        title = state_data["title"]
         photo_id = message.photo[-1].file_id
         await ImageService.set_image(photo_id, title)
         await state.clear()

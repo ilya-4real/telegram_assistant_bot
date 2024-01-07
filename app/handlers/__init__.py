@@ -5,7 +5,6 @@ from . import (
     email_verify_handler,
     task_handlers,
     common_handlers,
-    
 )
 from .callbacks import task_callbacks
 
@@ -19,4 +18,4 @@ routers = [
     task_handlers.router,
     task_callbacks.router,
     common_handlers.router,
-    ]
+]

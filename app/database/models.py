@@ -8,15 +8,15 @@ from typing import Annotated
 
 pk = Annotated[int, mapped_column(BigInteger, primary_key=True)]
 
+
 class User(Base):
     __tablename__ = "users_table"
     id: Mapped[pk]
     username: Mapped[str] = mapped_column(nullable=False, default="unknown")
     email: Mapped[str | None]
     registered_at: Mapped[datetime] = mapped_column(
-        nullable=False, 
-        default=datetime.utcnow
-        )
+        nullable=False, default=datetime.utcnow
+    )
     city: Mapped[str | None]
     is_admin: Mapped[bool] = mapped_column(default=False)
 
@@ -26,10 +26,14 @@ class Task(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str | None]
     body: Mapped[str | None]
-    created_at : Mapped[datetime] = mapped_column(nullable=False, default=datetime.utcnow)
-    expires_at : Mapped[datetime | None]
-    job_id: Mapped[str] 
-    user_id: Mapped[int] = mapped_column(ForeignKey("users_table.id", ondelete="CASCADE"))
+    created_at: Mapped[datetime] = mapped_column(
+        nullable=False, default=datetime.utcnow
+    )
+    expires_at: Mapped[datetime | None]
+    job_id: Mapped[str]
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey("users_table.id", ondelete="CASCADE")
+    )
 
 
 class Image(Base):
@@ -42,4 +46,6 @@ class CurrencySymbol(Base):
     __tablename__ = "currency_symbols"
     id: Mapped[int] = mapped_column(primary_key=True)
     symbol: Mapped[str] = mapped_column(nullable=False)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users_table.id", ondelete="CASCADE"))
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey("users_table.id", ondelete="CASCADE")
+    )

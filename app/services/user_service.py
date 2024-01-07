@@ -6,6 +6,7 @@ from config import ADMIN_ID
 
 class UsersService:
     """Service that manages work with user and it's database table"""
+
     repository = UsersRepository()
 
     @classmethod
@@ -18,14 +19,14 @@ class UsersService:
         """returns user email if it is set"""
         result = await cls.repository.get_user(user_id)
         return result.email
-    
+
     @classmethod
     def check_is_admin(cls, user_id: int):
         """returns True if user is admin"""
         return user_id == int(ADMIN_ID)
-    
+
     @classmethod
-    async def set_email(cls,user_id: int, email: str) -> None:
+    async def set_email(cls, user_id: int, email: str) -> None:
         """sets user's email in database"""
         await cls.repository.update_email(user_id, email)
 
@@ -37,11 +38,10 @@ class UsersService:
     @classmethod
     async def get_city(cls, user_id: int):
         """returns user's city from database if exists"""
-        user =  await cls.repository.get_user(user_id)
+        user = await cls.repository.get_user(user_id)
         return user.city
-    
+
     @classmethod
     async def get_user(cls, user_id: int):
         """returns user model from database"""
         return await cls.repository.get_user(user_id)
-    

@@ -5,6 +5,7 @@ from app.exceptions import InvalidCity
 
 from typing import NamedTuple
 
+
 class ApisData(NamedTuple):
     weather: dict[str, str | float]
     currency: dict[str, str | float]
@@ -12,6 +13,7 @@ class ApisData(NamedTuple):
 
 class FacadeApiGateway:
     """class that manages polling data from APIs"""
+
     weather_poller = WeatherApiPoller
     currency_poller = CurrencyApiPoller
 
@@ -19,7 +21,7 @@ class FacadeApiGateway:
     async def get_weather(cls, city: str) -> dict[str, float]:
         """polls weather API"""
         try:
-            weather = await cls.weather_poller.poll_data(city, 'metric')
+            weather = await cls.weather_poller.poll_data(city, "metric")
             return weather
         except TypeError:
             raise InvalidCity("city is not set")

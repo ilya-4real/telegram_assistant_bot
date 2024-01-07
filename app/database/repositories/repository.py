@@ -9,6 +9,7 @@ from ..database import async_session_maker
 
 class AbstractRepository(ABC):
     """repository interface"""
+
     @abstractmethod
     async def add_one(self):
         raise NotImplementedError
